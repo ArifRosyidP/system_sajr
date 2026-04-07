@@ -9,6 +9,7 @@
             </div>
             <div class="modal-body">
                 <form action="#" id="productForm">
+                    @csrf
                     <div class="mb-3">
                         <label for="name">Name
                         </label>
