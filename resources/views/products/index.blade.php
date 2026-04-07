@@ -5,7 +5,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Products</title>
-    {{-- <meta name="csrf-token" content="{{ csrf_token() }}"> --}}
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.3.3/css/bootstrap.min.css">
@@ -128,14 +128,16 @@
             $('.btnSubmit').text('Create');
         }
 
-        $('#productForm').submit(function(e) {
+        //tabel product
+        $('#productForm').on('submit', function(e) {
             e.preventDefault();
-
             const formData = new FormData(this);
 
+            //store data or add data
             $.ajax({
                 headers: {
-                    // 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute(
+                        'content')
                 },
                 type: 'POST',
                 url: 'products',
@@ -160,6 +162,55 @@
                 }
             })
         });
+
+        //destroy
+        function deleteModal(e) {
+            let id = e.getAttribute('data-id');
+
+            const swalWithBootstrapButtons = Swal.mixin({
+                customClass: {
+                    confirmButton: "btn btn-success",
+                    cancelButton: "btn btn-danger"
+                },
+                buttonsStyling: true
+            });
+            swalWithBootstrapButtons.fire({
+                title: "Are you sure?",
+                text: "You won't be able to revert this!",
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonText: "Yes, delete it!",
+                cancelButtonText: "No, cancel!",
+                reverseButtons: true
+            }).then((result) => {
+                if (result.isConfirmed) swalWithBootstrapButtons.fire({
+                    title: "Deleted!",
+                    text: "Your file has been deleted.",
+                    icon: "success"
+                });
+                else if (result.dismiss === Swal.DismissReason.cancel) swalWithBootstrapButtons.fire({
+                    title: "Cancelled",
+                    text: "Your imaginary file is safe :)",
+                    icon: "error"
+                });
+            });
+
+            // Swal.fire({
+            //     title: "Delete",
+            //     text: "Are you sure to delete this product?",
+            //     icon: "question",
+            //     showCancelButton: true,
+            //     confirmButtonColor: "#3085d6",
+            //     cancelButtonColor: "#d33",
+            //     confirmButtonText: "Yes, delete it!"
+            // }).then((result) => {
+            //     if (result.isConfirmed) Swal.fire({
+            //         title: "Deleted!",
+            //         text: "Your file has been deleted.",
+            //         icon: "success"
+            //     });
+            // });
+        }
     </script>
 
 

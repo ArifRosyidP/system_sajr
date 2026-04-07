@@ -80,7 +80,7 @@ class ProductController extends Controller
         ->addColumn('action', function ($row) {
             return '<div class="text-center"> 
             <button class="btn btn-sm btn-success" style="width: 100px" data-id="' . $row->id . '">Edit</button> 
-            <button class="btn btn-sm btn-danger" style="width: 100px" data-id="' . $row->id . '">Delete</button> 
+            <button class="btn btn-sm btn-danger" onClick="deleteModal(this)" style="width: 100px" data-id="' . $row->id . '">Delete</button> 
             </div>';
         })
         ->make();
