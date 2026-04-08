@@ -48,7 +48,8 @@
                                 <th>Slug</th>
                                 <th>Description</th>
                                 <th>Price</th>
-                                <th width="20%">Action</th>
+                                <th width="15%">Image</th>
+                                <th width="15%">Action</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -84,15 +85,21 @@
         //     responsive: true
         // });
 
+        let save_method;
         $(document).ready(function() {
             productsTable();
         });
 
         function productsTable() {
             $('#tableProduct').DataTable({
+                columnDefs: [{
+                    orderable: false,
+                    targets: [0, 5, 6],
+                }],
                 processing: true,
                 serverSide: true,
                 responsive: true,
+                align: 'center',
                 ajax: 'products/dataTable',
                 columns: [{
                         data: 'DT_RowIndex',
@@ -115,8 +122,13 @@
                         name: 'price'
                     },
                     {
+                        data: 'image',
+                        name: 'image'
+                    },
+                    {
+
                         data: 'action',
-                        name: 'action'
+                        name: 'action',
                     },
                 ]
             });
@@ -124,49 +136,60 @@
 
         function showModal() {
             $('#productModal').modal('show');
-            $('#modal-title').text('Create New Product');
-            $('.btnSubmit').text('Create');
+            $('.modal-title').text('Add Product');
+            $('.btnSubmit').text('Add');
+
+            save_method = 'add';
         }
 
         //tabel product
         $('#productForm').on('submit', function(e) {
             e.preventDefault();
-            const formData = new FormData(this);
+            const formData = new FormData(this)
 
-            //store data or add data
+            let url, method;
+            url = 'products';
+            method = 'POST';
+
+            if (save_method == 'update') {
+                url = 'products/' + $('#id').val();
+                formData.append('_method', 'PUT');
+                // method = 'PUT';
+            }
+
+            //add and edit data
             $.ajax({
                 headers: {
                     'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute(
                         'content')
                 },
-                type: 'POST',
-                url: 'products',
+                type: method,
+                url: url,
                 data: formData,
                 processData: false,
                 contentType: false,
                 success: function(response) {
                     $('#productModal').modal('hide');
                     $('#tableProduct').DataTable().ajax.reload();
-                    $('#productForm')[0].reset();
                     Swal.fire({
-                        title: "Good job!",
-                        text: response.message,
-                        icon: "success",
+                        title: response.title,
+                        text: response.text,
+                        icon: response.icon,
                         showConfirmButton: false,
                         timer: 1500
                     });
                 },
                 error: function(jqXHR, textStatus, errorThrown) {
                     console.log(jqXHR.responseText);
-                    alert(jqXHR.responseText);
+                    alert("Error : " + jqXHR.responseText);
                 }
             })
         });
 
-        //destroy
+        //destroy or delete data
         function deleteModal(e) {
             let id = e.getAttribute('data-id');
-
+            // alert(id);
             const swalWithBootstrapButtons = Swal.mixin({
                 customClass: {
                     confirmButton: "btn btn-success",
@@ -183,34 +206,86 @@
                 cancelButtonText: "No, cancel!",
                 reverseButtons: true
             }).then((result) => {
-                if (result.isConfirmed) swalWithBootstrapButtons.fire({
-                    title: "Deleted!",
-                    text: "Your file has been deleted.",
-                    icon: "success"
-                });
-                else if (result.dismiss === Swal.DismissReason.cancel) swalWithBootstrapButtons.fire({
+                if (result.isConfirmed) {
+                    $.ajax({
+                        headers: {
+                            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')
+                                .getAttribute(
+                                    'content')
+                        },
+                        type: 'DELETE',
+                        url: 'products/' + id,
+                        dataType: 'json',
+                        success: function(response) {
+                            // $('#productModal').modal('hide');
+                            $('#tableProduct').DataTable().ajax.reload();
+                            // $('#productForm')[0].reset();
+                            Swal.fire({
+                                title: "Good job!",
+                                text: response.message,
+                                icon: "success",
+                                showConfirmButton: false,
+                                timer: 1500
+                            });
+                        },
+                        error: function(jqXHR, textStatus, errorThrown) {
+                            console.log(jqXHR.responseText);
+                            alert(jqXHR.responseText);
+                        }
+                    })
+                } else if (result.dismiss === Swal.DismissReason.cancel) swalWithBootstrapButtons.fire({
                     title: "Cancelled",
                     text: "Your imaginary file is safe :)",
                     icon: "error"
                 });
-            });
 
-            // Swal.fire({
-            //     title: "Delete",
-            //     text: "Are you sure to delete this product?",
-            //     icon: "question",
-            //     showCancelButton: true,
-            //     confirmButtonColor: "#3085d6",
-            //     cancelButtonColor: "#d33",
-            //     confirmButtonText: "Yes, delete it!"
-            // }).then((result) => {
-            //     if (result.isConfirmed) Swal.fire({
-            //         title: "Deleted!",
-            //         text: "Your file has been deleted.",
-            //         icon: "success"
-            //     });
-            // });
+            });
         }
+
+        //show data for edit
+        function editModal(e) {
+            let id = e.getAttribute('data-id');
+            save_method = 'update';
+
+            $.ajax({
+                headers: {
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute(
+                        'content')
+                },
+                type: 'GET',
+                url: 'products/' + id,
+                success: function(response) {
+                    let result = response.data;
+                    $('#name').val(result.name);
+                    $('#description').val(result.description);
+                    $('#price').val(result.price);
+                    $('#id').val(result.uuid);
+
+                },
+                error: function(jqXHR, textStatus, errorThrown) {
+                    console.log(jqXHR.responseText);
+                    alert("Error displaying data: " + jqXHR.responseText);
+                }
+            })
+
+            $('#productModal').modal('show');
+            $('.modal-title').text('Update Data Product');
+            $('.btnSubmit').text('update');
+
+        }
+
+        //menghapus isi modal
+        $('#productModal').on('hidden.bs.modal', function() {
+            let form = $('#productForm');
+            form[0].reset(); // reset input
+            // reset validator
+            if (form.data('validator')) {
+                form.validate().resetForm();
+            }
+            // hapus class valid / invalid
+            form.find('.is-valid').removeClass('is-valid');
+            form.find('.is-invalid').removeClass('is-invalid');
+        });
     </script>
 
 

@@ -4,12 +4,13 @@
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h1 class="modal-title fs-5" id="staticBackdropLabel">Add New Product</h1>
+                <h1 class="modal-title fs-5" id="staticBackdropLabel"></h1>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <form action="#" id="productForm">
+                <form action="#" id="productForm" enctype="multipart/form-data">
                     @csrf
+                    <input type="hidden" name="id" id="id">
                     <div class="mb-3">
                         <label for="name">Name
                         </label>
@@ -25,9 +26,14 @@
                         </label>
                         <input type="text" name="price" class="form-control" id="price">
                     </div>
+                    <div class="mb-3">
+                        <label for="image">Image (Max 2MB)
+                        </label>
+                        <input type="file" name="image" class="form-control" id="image" accept="image/*">
+                    </div>
                     <div class="float-end">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                        <button type="submit" class="btn btn-primary btnSubmit">Save changes</button>
+                        <button type="submit" class="btn btn-primary btnSubmit"></button>
                     </div>
                 </form>
             </div>
