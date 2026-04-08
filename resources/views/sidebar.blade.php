@@ -126,7 +126,10 @@
             <ul class="nav flex-column">
 
                 <li class="nav-item">
-                    <a class="nav-link text-white">Dashboard</a>
+                    <a href="/products" class="nav-link text-white">Produk</a>
+                </li>
+                <li class="nav-item">
+                    <a href="/purchaseOrder" class="nav-link text-white">Purchase Order</a>
                 </li>
 
                 <!-- Dropdown -->
