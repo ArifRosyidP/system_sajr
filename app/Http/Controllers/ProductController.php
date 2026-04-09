@@ -19,7 +19,7 @@ class ProductController extends Controller
      */
     public function index(): View
     {
-        return view('products.index');
+        return view('products.index', ['tittle' => 'Products']);
     }
 
     /**
@@ -40,17 +40,25 @@ class ProductController extends Controller
     {
         $data = $request->validated();
 
-        if ($request->hasFile('image')) {
-            $request->file('image')->store('images', 'public');
-            $data['image'] = $request->file('image')->hashName();
+        try {
+            if ($request->hasFile('image')) {
+                $request->file('image')->store('images', 'public');
+                $data['image'] = $request->file('image')->hashName();
+            }
+
+            $data['uuid'] = Str::uuid();
+            $data['slug'] = Str::slug($data['name']);
+            Product::create($data);
+            return response()->json([
+                'title' => "Good job!", 'text' => 'Product added successfully', 'icon' => "success"
+            ]);
+        } catch (Exception $error) {
+            return response()->json([
+                'title' => "Error!", 'text' => $error->getMessage(), 'icon' => "error"
+            ]);
         }
 
-        $data['uuid'] = Str::uuid();
-        $data['slug'] = Str::slug($data['name']);
-        Product::create($data);
-        return response()->json([
-            'title' => "Good job!", 'text' => 'Product updated successfully', 'icon' => "success"
-        ]);
+        
     }
 
     /**
@@ -64,9 +72,9 @@ class ProductController extends Controller
             // 'data' => Product::find($id)
             'data' => Product::where('uuid', $id)->firstOrFail()
             ]);
-        } catch (Exception $th) {
+        } catch (Exception $error) {
             return response()->json([
-            'title' => "Error!", 'text' => $th->getMessage(), 'icon' => "error"
+            'text' => $error->getMessage()
             ]);
         }  
     }
@@ -93,7 +101,7 @@ class ProductController extends Controller
     // $product->price = $data['price'];
     // $product->save();
     // $data['uuid'] = Str::uuid();
-    public function update(ProductRequest $request, string $id)
+    public function update(ProductRequest $request, string $id) : JsonResponse
     {
         $data = $request->validated();
         try {
@@ -129,17 +137,25 @@ class ProductController extends Controller
      * Remove the specified resource from storage.
     */
     // Product::destroy($id);
-    public function destroy(string $id)
+    public function destroy(string $id) : JsonResponse
     {
-        $product = Product::where('uuid', $id)->firstOrFail();
-        // hapus gambar jika ada
-        if ($product->image && Storage::disk('public')->exists('images/'.$product->image)) {
-            Storage::disk('public')->delete('images/'.$product->image);
+        try {
+            $product = Product::where('uuid', $id)->firstOrFail();
+            // hapus gambar jika ada
+            if ($product->image && Storage::disk('public')->exists('images/'.$product->image)) {
+                Storage::disk('public')->delete('images/'.$product->image);
+            }
+            $product->delete();
+            return response()->json([
+                'title' => "Good job!", 'text' => 'Product deleted successfully', 'icon' => "success"
+            ]);
+        } catch (Exception $error) {
+            return response()->json([
+            'title' => "Error!", 'text' => $error->getMessage(), 'icon' => "error"
+            ]);
         }
-        $product->delete();
-        return response()->json([
-            'message' => 'Product deleted successfully'
-        ]);
+
+        
     }
 
     public function serversideTable(Request $request){

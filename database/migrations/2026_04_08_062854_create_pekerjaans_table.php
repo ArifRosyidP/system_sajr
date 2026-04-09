@@ -16,7 +16,7 @@ return new class extends Migration
             $table->uuid('uuid')->unique();
             $table->string('nama_pekerjaan');
             $table->string('kode')->nullable();
-            $table->string('id_klien');
+            $table->foreignId('id_klien')->constrained('clients');
             $table->timestamps();
         });
     }

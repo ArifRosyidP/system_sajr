@@ -13,6 +13,7 @@
 </head>
 
 <body>
+    {{-- {{ dd($tittle) }} --}}
     @include('sidebar')
 
     <!-- CONTENT -->
@@ -39,7 +40,8 @@
             <div class="card">
                 <div class="card header px-3 py-2">Table Product</div>
                 <div class="card body px-3 py-2">
-                    <button class="btn btn-primary mb-1" style="width: 100px" onclick="showModal()">Create</button>
+                    <button class="btn btn-primary mb-1" style="width: 100px"
+                        onclick="showModalProduct()">Create</button>
                     <table class="table table-bordered table-striped" id="tableProduct">
                         <thead>
                             <tr>
@@ -61,7 +63,8 @@
         </div>
     </div>
 
-    @include('products.modal')
+    <x-modal></x-modal>
+    {{-- @include('components.modal') --}}
 
     <script src="https://code.jquery.com/jquery-4.0.0.min.js"
         integrity="sha256-OaVG6prZf4v69dPg6PhVattBXkcOWQB62pdZ3ORyrao=" crossorigin="anonymous"></script>
@@ -134,7 +137,7 @@
             });
         }
 
-        function showModal() {
+        function showModalProduct() {
             $('#productModal').modal('show');
             $('.modal-title').text('Add Product');
             $('.btnSubmit').text('Add');
@@ -221,9 +224,9 @@
                             $('#tableProduct').DataTable().ajax.reload();
                             // $('#productForm')[0].reset();
                             Swal.fire({
-                                title: "Good job!",
-                                text: response.message,
-                                icon: "success",
+                                title: response.title,
+                                text: response.text,
+                                icon: response.icon,
                                 showConfirmButton: false,
                                 timer: 1500
                             });
@@ -259,7 +262,7 @@
                     $('#name').val(result.name);
                     $('#description').val(result.description);
                     $('#price').val(result.price);
-                    $('#id').val(result.uuid);
+                    $('#id').val(result.id);
 
                 },
                 error: function(jqXHR, textStatus, errorThrown) {

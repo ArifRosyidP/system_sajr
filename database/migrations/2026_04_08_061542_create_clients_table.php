@@ -16,7 +16,7 @@ return new class extends Migration
             $table->uuid('uuid')->unique();
             $table->string('nama');
             $table->string('alamat')->nullable();
-            $table->string('nomor_hp')->nullable();
+            $table->string('nomor_hp',20)->nullable();
             $table->string('npwp')->nullable();
             $table->timestamps();
         });

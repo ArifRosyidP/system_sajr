@@ -15,12 +15,13 @@ return new class extends Migration
             $table->id();
             $table->uuid('uuid')->unique();
             $table->date('tanggal_po');
-            $table->string('id_klien');
-            $table->string('id_pekerjaan')->nullable();
-            $table->string('id_subkontraktor')->nullable();
+            $table->foreignId('id_klien')->constrained('clients');
+            // $table->foreignId('id_pekerjaan')->nullable()->constrained('pekerjaans')->nullOnDelete();
+            $table->foreignId('id_pekerjaan')->nullable()->constrained('pekerjaans');
+            $table->foreignId('id_subkontraktor')->nullable()->constrained('subkontraktors');
             $table->string('nomor_po');
             $table->string('pajak')->nullable();
-            $table->string('id_suplier');
+            $table->foreignId('id_suplier')->constrained('supliers');
             $table->string('nama_barang');
             $table->decimal('kuantitas');
             $table->string('satuan');
@@ -29,7 +30,7 @@ return new class extends Migration
             $table->decimal('transportasi')->nullable();
             $table->string('termofpayment');
             $table->date('tanggal_pengiriman');
-            $table->string('id_personincharge');
+            $table->foreignId('id_personincharge')->constrained('personincharges');
             $table->string('tujuan');
             $table->string('catatan')->nullable();
             $table->string('invoice')->nullable();
