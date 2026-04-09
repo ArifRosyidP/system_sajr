@@ -2,9 +2,13 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Model;
 
 class Pekerjaan extends Model
 {
-    protected $fillable = ['uuid', 'nama_pekerjaan', 'kode', 'id_klien'];
+    use HasUuids;
+    protected $fillable = ['id', 'nama_pekerjaan', 'kode', 'id_klien'];
+    public $incrementing = false;
+    protected $keyType = 'string';
 }

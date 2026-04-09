@@ -46,7 +46,7 @@ class ProductController extends Controller
                 $data['image'] = $request->file('image')->hashName();
             }
 
-            $data['uuid'] = Str::uuid();
+            $data['id'] = Str::uuid();
             $data['slug'] = Str::slug($data['name']);
             Product::create($data);
             return response()->json([
@@ -70,7 +70,7 @@ class ProductController extends Controller
         try {
             return response()->json([
             // 'data' => Product::find($id)
-            'data' => Product::where('uuid', $id)->firstOrFail()
+            'data' => Product::where('id', $id)->firstOrFail()
             ]);
         } catch (Exception $error) {
             return response()->json([
@@ -105,7 +105,7 @@ class ProductController extends Controller
     {
         $data = $request->validated();
         try {
-            $product = Product::where('uuid', $id)->firstOrFail();
+            $product = Product::where('id', $id)->firstOrFail();
             $data['slug'] = Str::slug($data['name']);
             // cek apakah ada gambar baru
             if ($request->hasFile('image')) {
@@ -121,7 +121,7 @@ class ProductController extends Controller
 
                 $data['image'] = $image->hashName();
             }
-            Product::where('uuid', $id)->update($data);
+            Product::where('id', $id)->update($data);
 
             return response()->json([
             'title' => "Good job!", 'text' => 'Product updated successfully', 'icon' => "success"
@@ -140,7 +140,7 @@ class ProductController extends Controller
     public function destroy(string $id) : JsonResponse
     {
         try {
-            $product = Product::where('uuid', $id)->firstOrFail();
+            $product = Product::where('id', $id)->firstOrFail();
             // hapus gambar jika ada
             if ($product->image && Storage::disk('public')->exists('images/'.$product->image)) {
                 Storage::disk('public')->delete('images/'.$product->image);

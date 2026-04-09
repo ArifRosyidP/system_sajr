@@ -12,16 +12,16 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('purchasingorders', function (Blueprint $table) {
-            $table->id();
-            $table->uuid('uuid')->unique();
+            // $table->id();
+            $table->uuid('id')->primary();
             $table->date('tanggal_po');
-            $table->foreignId('id_klien')->constrained('clients');
+            $table->foreignUuid('id_klien')->constrained('clients');
             // $table->foreignId('id_pekerjaan')->nullable()->constrained('pekerjaans')->nullOnDelete();
-            $table->foreignId('id_pekerjaan')->nullable()->constrained('pekerjaans');
-            $table->foreignId('id_subkontraktor')->nullable()->constrained('subkontraktors');
+            $table->foreignUuid('id_pekerjaan')->nullable()->constrained('pekerjaans');
+            $table->foreignUuid('id_subkontraktor')->nullable()->constrained('subkontraktors');
             $table->string('nomor_po');
             $table->string('pajak')->nullable();
-            $table->foreignId('id_suplier')->constrained('supliers');
+            $table->foreignUuid('id_suplier')->constrained('suppliers');
             $table->string('nama_barang');
             $table->decimal('kuantitas');
             $table->string('satuan');
@@ -30,7 +30,7 @@ return new class extends Migration
             $table->decimal('transportasi')->nullable();
             $table->string('termofpayment');
             $table->date('tanggal_pengiriman');
-            $table->foreignId('id_personincharge')->constrained('personincharges');
+            $table->foreignUuid('id_personincharge')->constrained('personincharges');
             $table->string('tujuan');
             $table->string('catatan')->nullable();
             $table->string('invoice')->nullable();
