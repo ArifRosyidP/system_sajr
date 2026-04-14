@@ -19,7 +19,7 @@ class ProductController extends Controller
      */
     public function index(): View
     {
-        return view('products.index', ['tittle' => 'Products']);
+        return view('products.index', ['title' => 'Produk']);
     }
 
     /**
@@ -171,8 +171,8 @@ class ProductController extends Controller
         })
         ->addColumn('action', function ($row) {
             return '<div class="text-center"> 
-            <button class="btn btn-sm btn-success" onClick="editModal(this)" style="width: 70px" data-id="' . $row->uuid . '">Edit</button> 
-            <button class="btn btn-sm btn-danger" onClick="deleteModal(this)" style="width: 70px" data-id="' . $row->uuid . '">Delete</button> 
+            <button class="btn btn-sm btn-success" onClick="editModal(this)" style="width: 70px" data-id="' . $row->id . '">Edit</button> 
+            <button class="btn btn-sm btn-danger" onClick="deleteModal(this)" style="width: 70px" data-id="' . $row->id . '">Delete</button> 
             </div>';
         })
         ->rawColumns(['image', 'action'])

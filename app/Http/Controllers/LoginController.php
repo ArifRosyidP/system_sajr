@@ -3,16 +3,15 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use Illuminate\View\View;
 
-class ClientController extends Controller
+class LoginController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
-    public function index(): View
+    public function index()
     {
-        return view('po.clients', ['title' => 'Klien']);
+        return view('login', ['title' => 'Login']);
     }
 
     /**
