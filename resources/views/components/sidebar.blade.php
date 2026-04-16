@@ -25,17 +25,19 @@
             <!--begin::Sidebar Menu-->
             <ul class="nav sidebar-menu flex-column" data-lte-toggle="treeview" role="navigation"
                 aria-label="Main navigation" data-accordion="false" id="navigation">
-                <li class="nav-item {{ request()->is('product*') ? 'active' : '' }}">
-                    <a href="../generate/theme.html" class="nav-link">
-                        <i class="nav-icon bi bi-palette"></i>
-                        <p>Products</p>
-                    </a>
-                </li>
+                @if (auth()->user()->role == 'admin')
+                    <li class="nav-item ">
+                        <a href="{{ route('home') }}" class="nav-link {{ request()->routeIs('home') ? 'active' : '' }}">
+                            <i class="nav-icon bi bi-palette"></i>
+                            <p>Products</p>
+                        </a>
+                    </li>
+                @endif
 
                 <li class="nav-header">Purchase Order</li>
 
-                <li class="nav-item {{ request()->is('po*') ? 'active' : '' }}">
-                    <a href="../generate/theme.html" class="nav-link">
+                <li class="nav-item ">
+                    <a href="../generate/theme.html" class="nav-link {{ request()->is('po*') ? 'active' : '' }}">
                         <i class="nav-icon bi bi-file-earmark-text-fill"></i>
                         <p>Purchase Order</p>
                     </a>
@@ -51,7 +53,7 @@
                     </a>
                     <ul class="nav nav-treeview ps-3">
                         <li class="nav-item">
-                            <a href="../index.html"
+                            <a href="{{ route('setup.klien') }}"
                                 class="nav-link {{ request()->is('setup/klien*') ? 'active' : '' }}">
                                 <i class="nav-icon bi bi-person-badge"></i>
                                 <p>Klien</p>

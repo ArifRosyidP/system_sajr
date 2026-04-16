@@ -39,7 +39,7 @@ class ProductController extends Controller
     public function store(ProductRequest $request): JsonResponse
     {
         $data = $request->validated();
-
+        
         try {
             if ($request->hasFile('image')) {
                 $request->file('image')->store('images', 'public');

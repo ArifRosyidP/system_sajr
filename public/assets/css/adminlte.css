@@ -6,7 +6,11 @@
  *   License: Open source - MIT <https://opensource.org/licenses/MIT>
  */
 
-#tableProduct th.no-sort .dt-column-order {
+/* #tableProduct th.no-sort .dt-column-order {
+    display: none !important;
+} */
+
+table.dataTable th.no-sort .dt-column-order {
     display: none !important;
 }
 
