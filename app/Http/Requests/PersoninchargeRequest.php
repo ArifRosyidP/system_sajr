@@ -26,8 +26,8 @@ class PersoninchargeRequest extends FormRequest
             'nama' => 'required|min:3|max:255',
             'alamat' => 'nullable|string|min:10|max:255|regex:/^[a-zA-Z0-9\s.,\-\/#()]+$/',
             // 'nomor_hp' => 'required|string|max:20',
-            'nomor_hp' => 'nullable',
-            'npwp' => 'nullable',
+            'nomor_hp' => 'nullable|string|max:20',
+            'npwp' => 'nullable|digits_between:15,16',
             // 'npwp' => 'nullable|digits_between:15,16',
         ];
     }

@@ -72,6 +72,10 @@
                     @yield('setup-pekerjaan')
                 @elseif ($title === 'PIC')
                     @yield('setup-pic')
+                @elseif ($title === 'Subkontraktor')
+                    @yield('setup-subkontraktor')
+                @elseif ($title === 'Supplier')
+                    @yield('setup-supplier')
                 @endif
                 <x-footer></x-footer>
             </div>
@@ -177,6 +181,8 @@
 @stack('KaroseriJs')
 @stack('PekerjaanJs')
 @stack('PicJs')
+@stack('SubkontraktorJs')
+@stack('SupplierJs')
 
 
 

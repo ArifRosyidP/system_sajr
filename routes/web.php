@@ -7,6 +7,8 @@ use App\Http\Controllers\PekerjaanController;
 use App\Http\Controllers\PersoninchargeController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\RegisterController;
+use App\Http\Controllers\SubkontraktorController;
+use App\Http\Controllers\SupplierController;
 use Illuminate\Support\Facades\Route;
 
 // Route::get('/', function () {
@@ -35,6 +37,14 @@ Route::group(['middleware' => 'auth'], function(){
     Route::get('setup/pic', [PersoninchargeController::class, 'index'])->name('setup.pic');
     Route::get('setup/pic/dataTable', [PersoninchargeController::class, 'serversideTable']);
     Route::resource('pic', PersoninchargeController::class)->except(['create', 'edit']);
+
+    Route::get('setup/subkontraktor', [SubkontraktorController::class, 'index'])->name('setup.subkontraktor');
+    Route::get('setup/subkontraktor/dataTable', [SubkontraktorController::class, 'serversideTable']);
+    Route::resource('subkontraktor', SubkontraktorController::class)->except(['create', 'edit']);
+
+    Route::get('setup/supplier', [SupplierController::class, 'index'])->name('setup.supplier');
+    Route::get('setup/supplier/dataTable', [SupplierController::class, 'serversideTable']);
+    Route::resource('supplier', SupplierController::class)->except(['create', 'edit']);
 });
     
 Route::group(['middleware' => 'guest'], function(){

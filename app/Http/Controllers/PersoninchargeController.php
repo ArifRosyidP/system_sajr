@@ -54,8 +54,6 @@ class PersoninchargeController extends Controller
     {
         $data = $request->validated();
         try {
-            // cek apakah ada gambar baru
-
             Personincharge::where('id', $id)->update($data);
 
             return response()->json([

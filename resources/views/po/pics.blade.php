@@ -171,7 +171,7 @@
             method = 'POST';
 
             if (save_method == 'update') {
-                url = '/pic/' + $('#id').val();
+                url = '/pic/' + $('#picForm #id').val();
                 formData.append('_method', 'PUT');
                 // method = 'PUT';
             }

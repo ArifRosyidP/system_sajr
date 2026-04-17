@@ -166,7 +166,7 @@
             method = 'POST';
 
             if (save_method == 'update') {
-                url = '/pekerjaan/' + $('#id').val();
+                url = '/pekerjaan/' + $('#pekerjaanModal #id').val();
                 formData.append('_method', 'PUT');
                 // method = 'PUT';
             }

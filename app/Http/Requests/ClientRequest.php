@@ -28,8 +28,8 @@ class ClientRequest extends FormRequest
             // 'nomor_hp' => 'required|string|max:20',
             // 'nomor_hp' => 'nullable|regex:/^(\+62|62|0)8[1-9][0-9]{6,9}$/',
             // 'npwp' => 'nullable|regex:/^(\d{15}|\d{16}|\d{2}\.\d{3}\.\d{3}\.\d-\d{3}\.\d{3})$/',
-            'nomor_hp' => 'nullable',
-            'npwp' => 'nullable',
+            'nomor_hp' => 'nullable|string|max:20',
+            'npwp' => 'nullable|digits_between:15,16',
             // 'npwp' => 'nullable|digits_between:15,16',
         ];
     }

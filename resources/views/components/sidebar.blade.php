@@ -80,6 +80,20 @@
                                 <p>PIC</p>
                             </a>
                         </li>
+                        <li class="nav-item">
+                            <a href="{{ route('setup.subkontraktor') }}"
+                                class="nav-link {{ request()->is('setup/subkontraktor*') ? 'active' : '' }}">
+                                <i class="nav-icon bi bi-diagram-3"></i>
+                                <p>Subkontraktor</p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="{{ route('setup.supplier') }}"
+                                class="nav-link {{ request()->is('setup/supplier*') ? 'active' : '' }}">
+                                <i class="nav-icon bi bi-box-seam"></i>
+                                <p>Supplier</p>
+                            </a>
+                        </li>
                     </ul>
                 </li>
                 <li class="nav-item">
