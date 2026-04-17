@@ -1,6 +1,6 @@
 @extends('main')
 
-@section('setup-klien')
+@section('setup-karoseri')
     <!--begin::App Main-->
     <main class="app-main">
         <!--begin::App Content Header-->
@@ -52,15 +52,12 @@
                             <div class="card-body">
 
                                 <button class="btn btn-primary mb-1" style="width: 100px"
-                                    onclick="showModalKlien()">Add</button>
-                                <table class="table table-bordered table-striped" id="tableKlien">
+                                    onclick="showModalKaroseri()">Add</button>
+                                <table class="table table-bordered table-striped" id="tableKaroseri">
                                     <thead>
                                         <tr>
                                             <th>No</th>
-                                            <th>Nama</th>
-                                            <th>Alamat</th>
-                                            <th>Nomor HP</th>
-                                            <th>NPWP</th>
+                                            <th>Nomor Karoseri</th>
                                             <th width="15%">Action</th>
                                         </tr>
                                     </thead>
@@ -88,12 +85,12 @@
 @endsection
 
 
-@push('KlienJs')
+@push('KaroseriJs')
     <!-- Laravel Javascript Validation -->
     <script type="text/javascript" src="{{ asset('vendor/jsvalidation/js/jsvalidation.js') }}"></script>
     {!! \Proengsoft\JsValidation\Facades\JsValidatorFacade::formRequest(
-        'App\Http\Requests\ClientRequest',
-        '#klienForm',
+        'App\Http\Requests\KaroseriRequest',
+        '#karoseriForm',
     ) !!}
     {{-- {!! JsValidator::formRequest('App\Http\Requests\ProductRequest', '#productForm') !!} --}}
 
@@ -109,40 +106,28 @@
 
         let save_method;
         $(document).ready(function() {
-            klienTable();
+            karoseriTable();
         });
 
-        function klienTable() {
-            $('#tableKlien').DataTable({
+        function karoseriTable() {
+            $('#tableKaroseri').DataTable({
                 columnDefs: [{
                     orderable: false,
-                    targets: [0, 5],
+                    targets: [0, 2],
                     className: 'no-sort',
                 }],
                 processing: true,
                 serverSide: true,
                 responsive: true,
                 align: 'center',
-                ajax: '/setup/klien/dataTable',
+                ajax: '/setup/karoseri/dataTable',
                 columns: [{
                         data: 'DT_RowIndex',
                         name: 'DT_RowIndex'
                     },
                     {
-                        data: 'nama',
-                        name: 'nama'
-                    },
-                    {
-                        data: 'alamat',
-                        name: 'alamat'
-                    },
-                    {
-                        data: 'nomor_hp',
-                        name: 'nomor_hp'
-                    },
-                    {
-                        data: 'npwp',
-                        name: 'npwp'
+                        data: 'nomor_karoseri',
+                        name: 'nomor_karoseri'
                     },
                     {
 
@@ -153,25 +138,25 @@
             });
         }
 
-        function showModalKlien() {
-            $('#klienModal').modal('show');
-            $('.modal-title').text('Tambah Data Klien');
+        function showModalKaroseri() {
+            $('#karoseriModal').modal('show');
+            $('.modal-title').text('Tambah Data Karoseri');
             $('.btnSubmit').text('Tambah Data');
 
             save_method = 'add';
         }
 
         //tabel product
-        $('#klienForm').on('submit', function(e) {
+        $('#karoseriForm').on('submit', function(e) {
             e.preventDefault();
             const formData = new FormData(this)
 
             let url, method;
-            url = '/klien';
+            url = '/karoseri';
             method = 'POST';
 
             if (save_method == 'update') {
-                url = '/klien/' + $('#id').val();
+                url = '/karoseri/' + $('#id').val();
                 formData.append('_method', 'PUT');
                 // method = 'PUT';
             }
@@ -184,8 +169,8 @@
                 processData: false,
                 contentType: false,
                 success: function(response) {
-                    $('#klienModal').modal('hide');
-                    $('#tableKlien').DataTable().ajax.reload();
+                    $('#karoseriModal').modal('hide');
+                    $('#tableKaroseri').DataTable().ajax.reload();
                     Swal.fire({
                         title: response.title,
                         text: response.text,
@@ -245,11 +230,11 @@
                 if (result.isConfirmed) {
                     $.ajax({
                         type: 'DELETE',
-                        url: '/klien/' + id,
+                        url: '/karoseri/' + id,
                         dataType: 'json',
                         success: function(response) {
                             // $('#klienModal').modal('hide');
-                            $('#tableKlien').DataTable().ajax.reload();
+                            $('#tableKaroseri').DataTable().ajax.reload();
                             // $('#klienForm')[0].reset();
                             Swal.fire({
                                 title: response.title,
@@ -301,18 +286,15 @@
 
             $.ajax({
                 type: 'GET',
-                url: '/klien/' + id,
+                url: '/karoseri/' + id,
                 success: function(response) {
                     // console.log(response);
                     let result = response.data;
-                    $('#klienModal #nama').val(result.nama);
-                    $('#klienModal #alamat').val(result.alamat);
-                    $('#klienModal #nomor_hp').val(result.nomor_hp);
-                    $('#klienModal #npwp').val(result.npwp);
-                    $('#klienModal #id').val(result.id);
+                    $('#karoseriModal #nomor_karoseri').val(result.nomor_karoseri);
+                    $('#karoseriModal #id').val(result.id);
 
-                    $('#klienModal').modal('show');
-                    $('.modal-title').text('Update Data Klien');
+                    $('#karoseriModal').modal('show');
+                    $('.modal-title').text('Update Data Karoseri');
                     $('.btnSubmit').text('update');
 
                 },
@@ -348,8 +330,8 @@
         }
 
         //menghapus isi modal
-        $('#klienModal').on('hidden.bs.modal', function() {
-            let form = $('#klienForm');
+        $('#karoseriModal').on('hidden.bs.modal', function() {
+            let form = $('#karoseriForm');
             form[0].reset(); // reset input
             // reset validator
             if (form.data('validator')) {

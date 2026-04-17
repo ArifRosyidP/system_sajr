@@ -1,6 +1,6 @@
 @extends('main')
 
-@section('setup-klien')
+@section('setup-pic')
     <!--begin::App Main-->
     <main class="app-main">
         <!--begin::App Content Header-->
@@ -52,8 +52,8 @@
                             <div class="card-body">
 
                                 <button class="btn btn-primary mb-1" style="width: 100px"
-                                    onclick="showModalKlien()">Add</button>
-                                <table class="table table-bordered table-striped" id="tableKlien">
+                                    onclick="showModalPic()">Add</button>
+                                <table class="table table-bordered table-striped" id="tablePic">
                                     <thead>
                                         <tr>
                                             <th>No</th>
@@ -88,12 +88,12 @@
 @endsection
 
 
-@push('KlienJs')
+@push('PicJs')
     <!-- Laravel Javascript Validation -->
     <script type="text/javascript" src="{{ asset('vendor/jsvalidation/js/jsvalidation.js') }}"></script>
     {!! \Proengsoft\JsValidation\Facades\JsValidatorFacade::formRequest(
-        'App\Http\Requests\ClientRequest',
-        '#klienForm',
+        'App\Http\Requests\PersoninchargeRequest',
+        '#picForm',
     ) !!}
     {{-- {!! JsValidator::formRequest('App\Http\Requests\ProductRequest', '#productForm') !!} --}}
 
@@ -109,11 +109,11 @@
 
         let save_method;
         $(document).ready(function() {
-            klienTable();
+            picTable();
         });
 
-        function klienTable() {
-            $('#tableKlien').DataTable({
+        function picTable() {
+            $('#tablePic').DataTable({
                 columnDefs: [{
                     orderable: false,
                     targets: [0, 5],
@@ -123,7 +123,7 @@
                 serverSide: true,
                 responsive: true,
                 align: 'center',
-                ajax: '/setup/klien/dataTable',
+                ajax: '/setup/pic/dataTable',
                 columns: [{
                         data: 'DT_RowIndex',
                         name: 'DT_RowIndex'
@@ -153,25 +153,25 @@
             });
         }
 
-        function showModalKlien() {
-            $('#klienModal').modal('show');
-            $('.modal-title').text('Tambah Data Klien');
+        function showModalPic() {
+            $('#picModal').modal('show');
+            $('.modal-title').text('Tambah Data PIC');
             $('.btnSubmit').text('Tambah Data');
 
             save_method = 'add';
         }
 
         //tabel product
-        $('#klienForm').on('submit', function(e) {
+        $('#picForm').on('submit', function(e) {
             e.preventDefault();
             const formData = new FormData(this)
 
             let url, method;
-            url = '/klien';
+            url = '/pic';
             method = 'POST';
 
             if (save_method == 'update') {
-                url = '/klien/' + $('#id').val();
+                url = '/pic/' + $('#id').val();
                 formData.append('_method', 'PUT');
                 // method = 'PUT';
             }
@@ -184,8 +184,8 @@
                 processData: false,
                 contentType: false,
                 success: function(response) {
-                    $('#klienModal').modal('hide');
-                    $('#tableKlien').DataTable().ajax.reload();
+                    $('#picModal').modal('hide');
+                    $('#tablePic').DataTable().ajax.reload();
                     Swal.fire({
                         title: response.title,
                         text: response.text,
@@ -245,12 +245,10 @@
                 if (result.isConfirmed) {
                     $.ajax({
                         type: 'DELETE',
-                        url: '/klien/' + id,
+                        url: '/pic/' + id,
                         dataType: 'json',
                         success: function(response) {
-                            // $('#klienModal').modal('hide');
-                            $('#tableKlien').DataTable().ajax.reload();
-                            // $('#klienForm')[0].reset();
+                            $('#tablePic').DataTable().ajax.reload();
                             Swal.fire({
                                 title: response.title,
                                 text: response.text,
@@ -301,18 +299,18 @@
 
             $.ajax({
                 type: 'GET',
-                url: '/klien/' + id,
+                url: '/pic/' + id,
                 success: function(response) {
                     // console.log(response);
                     let result = response.data;
-                    $('#klienModal #nama').val(result.nama);
-                    $('#klienModal #alamat').val(result.alamat);
-                    $('#klienModal #nomor_hp').val(result.nomor_hp);
-                    $('#klienModal #npwp').val(result.npwp);
-                    $('#klienModal #id').val(result.id);
+                    $('#picModal #nama').val(result.nama);
+                    $('#picModal #alamat').val(result.alamat);
+                    $('#picModal #nomor_hp').val(result.nomor_hp);
+                    $('#picModal #npwp').val(result.npwp);
+                    $('#picModal #id').val(result.id);
 
-                    $('#klienModal').modal('show');
-                    $('.modal-title').text('Update Data Klien');
+                    $('#picModal').modal('show');
+                    $('.modal-title').text('Update Data PIC');
                     $('.btnSubmit').text('update');
 
                 },
@@ -348,8 +346,8 @@
         }
 
         //menghapus isi modal
-        $('#klienModal').on('hidden.bs.modal', function() {
-            let form = $('#klienForm');
+        $('#picModal').on('hidden.bs.modal', function() {
+            let form = $('#picForm');
             form[0].reset(); // reset input
             // reset validator
             if (form.data('validator')) {

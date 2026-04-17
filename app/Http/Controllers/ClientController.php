@@ -31,7 +31,7 @@ class ClientController extends Controller
             ]);
         } catch (Exception $error) {
             return response()->json([
-                'title' => "Eror!", 'text' => $error->getMessage(), 'icon' => "error"
+                'title' => "Error!", 'text' => $error->getMessage(), 'icon' => "error"
             ]);
         }      
     }

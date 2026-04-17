@@ -307,36 +307,4 @@
             form.find('.is-invalid').removeClass('is-invalid');
         });
     </script>
-
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            let swalData = localStorage.getItem('swal');
-
-            if (swalData) {
-                let data = JSON.parse(swalData);
-
-                Swal.fire({
-                    title: data.title,
-                    text: data.text,
-                    icon: data.icon,
-                    showConfirmButton: false,
-                    timer: 1500
-                });
-
-                // hapus setelah dipakai
-                localStorage.removeItem('swal');
-            }
-        });
-    </script>
-    @if (session('alert'))
-        <script>
-            Swal.fire({
-                title: "{{ session('alert.title') }}",
-                text: "{{ session('alert.text') }}",
-                icon: "{{ session('alert.icon') }}",
-                showConfirmButton: false,
-                timer: 1500
-            });
-        </script>
-    @endif
 @endpush

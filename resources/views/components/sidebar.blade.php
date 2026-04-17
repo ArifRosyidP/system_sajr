@@ -60,15 +60,24 @@
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a href="../index2.html" class="nav-link">
-                                <i class="nav-icon bi bi-circle"></i>
-                                <p>Dashboard v2</p>
+                            <a href="{{ route('setup.karoseri') }}"
+                                class="nav-link {{ request()->is('setup/karoseri*') ? 'active' : '' }}">
+                                <i class="nav-icon bi bi-truck"></i>
+                                <p>Karoseri</p>
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a href="../index3.html" class="nav-link">
-                                <i class="nav-icon bi bi-circle"></i>
-                                <p>Dashboard v3</p>
+                            <a href="{{ route('setup.pekerjaan') }}"
+                                class="nav-link {{ request()->is('setup/pekerjaan*') ? 'active' : '' }}">
+                                <i class="nav-icon bi bi-clipboard-check"></i>
+                                <p>Pekerjaan</p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="{{ route('setup.pic') }}"
+                                class="nav-link {{ request()->is('setup/pic*') ? 'active' : '' }}">
+                                <i class="nav-icon bi bi-person-check"></i>
+                                <p>PIC</p>
                             </a>
                         </li>
                     </ul>

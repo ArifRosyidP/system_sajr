@@ -2,63 +2,102 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\PersoninchargeRequest;
+use App\Models\Personincharge;
+use Exception;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Str;
+use Illuminate\View\View;
+use Yajra\DataTables\Facades\DataTables;
 
 class PersoninchargeController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
-    public function index()
+    
+    public function index(): View
     {
-        //
+        return view('po.pics', ['title' => 'PIC']);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
+    public function store(PersoninchargeRequest $request): JsonResponse
     {
-        //
+        // dd($request->all());
+        $data = $request->validated();
+        try {
+            $data['id'] = Str::uuid();
+            Personincharge::create($data);
+            return response()->json([
+                'title' => "Berhasil!", 'text' => 'Berhasil menabahkan data PIC', 'icon' => "success"
+            ]);
+        } catch (Exception $error) {
+            return response()->json([
+                'title' => "Error!", 'text' => $error->getMessage(), 'icon' => "error"
+            ]);
+        }      
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
+    public function show(string $id) : JsonResponse
     {
-        //
+        try {
+            return response()->json([
+            // 'data' => Product::find($id)
+            'data' => Personincharge::where('id', $id)->firstOrFail()
+            ]);
+        } catch (Exception $error) {
+            return response()->json([
+            'text' => $error->getMessage()
+            ]);
+        }  
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
+    public function update(PersoninchargeRequest $request, string $id) : JsonResponse
     {
-        //
+        $data = $request->validated();
+        try {
+            // cek apakah ada gambar baru
+
+            Personincharge::where('id', $id)->update($data);
+
+            return response()->json([
+            'title' => "Berhasil!", 'text' => 'Data PIC ' . $data['nama'] . ' berhasil diupdate', 'icon' => "success"
+        ]);
+        } catch (Exception $error) {
+            return response()->json([
+            'title' => "Error!", 'text' => $error->getMessage(), 'icon' => "error"
+            ]);
+        }
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(string $id)
+    public function destroy(string $id) : JsonResponse
     {
-        //
+        try {
+            $personincharge = Personincharge::where('id', $id)->firstOrFail();
+            $personincharge->delete();
+            return response()->json([
+                'title' => "Berhasil!", 'text' => 'Data PIC ' . $personincharge->nama . ' berhasil dihapus', 'icon' => "success"
+            ]);
+        } catch (Exception $error) {
+            return response()->json([
+            'title' => "Error!", 'text' => $error->getMessage(), 'icon' => "error"
+            ]);
+        }
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, string $id)
-    {
-        //
+    public function serversideTable(Request $request){
+        $personincharge = Personincharge::get();
+        return DataTables::of($personincharge)
+        ->addIndexColumn()
+        ->addColumn('action', function ($row) {
+            return '<div class="text-center"> 
+            <button class="btn btn-sm btn-success" onClick="editModal(this)" style="width: 70px" data-id="' . $row->id . '">Edit</button> 
+            <button class="btn btn-sm btn-danger" onClick="deleteModal(this)" style="width: 70px" data-id="' . $row->id . '">Delete</button> 
+            </div>';
+        })
+        ->rawColumns(['action'])
+        ->make();
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
-    {
-        //
-    }
+
+
+
 }

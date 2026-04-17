@@ -2,63 +2,110 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\PekerjaanRequest;
+use App\Models\Client;
+use App\Models\Pekerjaan;
+use Exception;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Str;
+use Illuminate\View\View;
+use Yajra\DataTables\Facades\DataTables;
 
 class PekerjaanController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
-    public function index()
+
+    public function index(): View
     {
-        //
+        $clients = Client::orderBy('nama')->get();
+
+        return view('po.pekerjaans', [
+            'title' => 'Pekerjaan',
+            'clients' => $clients
+    ]);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
+
+    public function store(PekerjaanRequest $request): JsonResponse
     {
-        //
+        // dd($request->all());
+        $data = $request->validated();
+        try {
+            $data['id'] = Str::uuid();
+            Pekerjaan::create($data);
+            return response()->json([
+                'title' => "Berhasil!", 'text' => 'Berhasil menabahkan data karoseri', 'icon' => "success"
+            ]);
+        } catch (Exception $error) {
+            return response()->json([
+                'title' => "Error!", 'text' => $error->getMessage(), 'icon' => "error"
+            ]);
+        }      
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
+    public function show(string $id) : JsonResponse
     {
-        //
+        try {
+            return response()->json([
+            // 'data' => Product::find($id)
+            'data' => Pekerjaan::where('id', $id)->firstOrFail()
+            ]);
+        } catch (Exception $error) {
+            return response()->json([
+            'text' => $error->getMessage()
+            ]);
+        }  
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
+    public function update(PekerjaanRequest $request, string $id) : JsonResponse
     {
-        //
+        $data = $request->validated();
+        try {
+            // cek apakah ada gambar baru
+
+            Pekerjaan::where('id', $id)->update($data);
+
+            return response()->json([
+            'title' => "Berhasil!", 'text' => 'Data Pekerjaan ' . $data['nama_pekerjaan'] . ' berhasil diupdate', 'icon' => "success"
+        ]);
+        } catch (Exception $error) {
+            return response()->json([
+            'title' => "Error!", 'text' => $error->getMessage(), 'icon' => "error"
+            ]);
+        }
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(string $id)
+    public function destroy(string $id) : JsonResponse
     {
-        //
+        try {
+            $pekerjaan = Pekerjaan::where('id', $id)->firstOrFail();
+            $pekerjaan->delete();
+            return response()->json([
+                'title' => "Berhasil!", 'text' => 'Data Pekerjaan ' . $pekerjaan->nama_pekerjaan . ' berhasil dihapus', 'icon' => "success"
+            ]);
+        } catch (Exception $error) {
+            return response()->json([
+            'title' => "Error!", 'text' => $error->getMessage(), 'icon' => "error"
+            ]);
+        }
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, string $id)
-    {
-        //
+    public function serversideTable(Request $request){
+        // $pekerjaan = Pekerjaan::get();
+        $pekerjaan = Pekerjaan::with('client')->get();
+        return DataTables::of($pekerjaan)
+        ->addIndexColumn()
+        ->editColumn('id_klien', function ($row) {
+            return $row->client->nama ?? '-';
+        })
+        ->addColumn('action', function ($row) {
+            return '<div class="text-center"> 
+            <button class="btn btn-sm btn-success" onClick="editModal(this)" style="width: 70px" data-id="' . $row->id . '">Edit</button> 
+            <button class="btn btn-sm btn-danger" onClick="deleteModal(this)" style="width: 70px" data-id="' . $row->id . '">Delete</button> 
+            </div>';
+        })
+        ->rawColumns(['action'])
+        ->make();
     }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
-    {
-        //
-    }
+    
 }

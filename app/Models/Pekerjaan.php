@@ -11,4 +11,8 @@ class Pekerjaan extends Model
     protected $fillable = ['id', 'nama_pekerjaan', 'kode', 'id_klien'];
     public $incrementing = false;
     protected $keyType = 'string';
+    public function client()
+    {
+        return $this->belongsTo(Client::class, 'id_klien');
+    }
 }

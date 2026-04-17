@@ -12,4 +12,9 @@ class Client extends Model
 
     public $incrementing = false;
     protected $keyType = 'string';
+
+    public function pekerjaan()
+    {
+        return $this->hasMany(Pekerjaan::class, 'id_klien');
+    }
 }

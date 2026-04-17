@@ -1,6 +1,6 @@
 @extends('main')
 
-@section('setup-klien')
+@section('setup-pekerjaan')
     <!--begin::App Main-->
     <main class="app-main">
         <!--begin::App Content Header-->
@@ -52,15 +52,14 @@
                             <div class="card-body">
 
                                 <button class="btn btn-primary mb-1" style="width: 100px"
-                                    onclick="showModalKlien()">Add</button>
-                                <table class="table table-bordered table-striped" id="tableKlien">
+                                    onclick="showModalPekerjaan()">Add</button>
+                                <table class="table table-bordered table-striped" id="tablePekerjaan">
                                     <thead>
                                         <tr>
                                             <th>No</th>
-                                            <th>Nama</th>
-                                            <th>Alamat</th>
-                                            <th>Nomor HP</th>
-                                            <th>NPWP</th>
+                                            <th>Klien</th>
+                                            <th>Nama Pekerjaan</th>
+                                            <th>Kode</th>
                                             <th width="15%">Action</th>
                                         </tr>
                                     </thead>
@@ -88,12 +87,12 @@
 @endsection
 
 
-@push('KlienJs')
+@push('PekerjaanJs')
     <!-- Laravel Javascript Validation -->
     <script type="text/javascript" src="{{ asset('vendor/jsvalidation/js/jsvalidation.js') }}"></script>
     {!! \Proengsoft\JsValidation\Facades\JsValidatorFacade::formRequest(
-        'App\Http\Requests\ClientRequest',
-        '#klienForm',
+        'App\Http\Requests\PekerjaanRequest',
+        '#pekerjaanForm',
     ) !!}
     {{-- {!! JsValidator::formRequest('App\Http\Requests\ProductRequest', '#productForm') !!} --}}
 
@@ -109,40 +108,36 @@
 
         let save_method;
         $(document).ready(function() {
-            klienTable();
+            pekerjaanTable();
         });
 
-        function klienTable() {
-            $('#tableKlien').DataTable({
+        function pekerjaanTable() {
+            $('#tablePekerjaan').DataTable({
                 columnDefs: [{
                     orderable: false,
-                    targets: [0, 5],
+                    targets: [0, 4],
                     className: 'no-sort',
                 }],
                 processing: true,
                 serverSide: true,
                 responsive: true,
                 align: 'center',
-                ajax: '/setup/klien/dataTable',
+                ajax: '/setup/pekerjaan/dataTable',
                 columns: [{
                         data: 'DT_RowIndex',
                         name: 'DT_RowIndex'
                     },
                     {
-                        data: 'nama',
-                        name: 'nama'
+                        data: 'id_klien',
+                        name: 'id_klien'
                     },
                     {
-                        data: 'alamat',
-                        name: 'alamat'
+                        data: 'nama_pekerjaan',
+                        name: 'nama_pekerjaan'
                     },
                     {
-                        data: 'nomor_hp',
-                        name: 'nomor_hp'
-                    },
-                    {
-                        data: 'npwp',
-                        name: 'npwp'
+                        data: 'kode',
+                        name: 'kode'
                     },
                     {
 
@@ -153,25 +148,25 @@
             });
         }
 
-        function showModalKlien() {
-            $('#klienModal').modal('show');
-            $('.modal-title').text('Tambah Data Klien');
+        function showModalPekerjaan() {
+            $('#pekerjaanModal').modal('show');
+            $('.modal-title').text('Tambah Data Pekerjaan');
             $('.btnSubmit').text('Tambah Data');
 
             save_method = 'add';
         }
 
         //tabel product
-        $('#klienForm').on('submit', function(e) {
+        $('#pekerjaanForm').on('submit', function(e) {
             e.preventDefault();
             const formData = new FormData(this)
 
             let url, method;
-            url = '/klien';
+            url = '/pekerjaan';
             method = 'POST';
 
             if (save_method == 'update') {
-                url = '/klien/' + $('#id').val();
+                url = '/pekerjaan/' + $('#id').val();
                 formData.append('_method', 'PUT');
                 // method = 'PUT';
             }
@@ -184,8 +179,8 @@
                 processData: false,
                 contentType: false,
                 success: function(response) {
-                    $('#klienModal').modal('hide');
-                    $('#tableKlien').DataTable().ajax.reload();
+                    $('#pekerjaanModal').modal('hide');
+                    $('#tablePekerjaan').DataTable().ajax.reload();
                     Swal.fire({
                         title: response.title,
                         text: response.text,
@@ -245,11 +240,11 @@
                 if (result.isConfirmed) {
                     $.ajax({
                         type: 'DELETE',
-                        url: '/klien/' + id,
+                        url: '/pekerjaan/' + id,
                         dataType: 'json',
                         success: function(response) {
                             // $('#klienModal').modal('hide');
-                            $('#tableKlien').DataTable().ajax.reload();
+                            $('#tablePekerjaan').DataTable().ajax.reload();
                             // $('#klienForm')[0].reset();
                             Swal.fire({
                                 title: response.title,
@@ -301,18 +296,17 @@
 
             $.ajax({
                 type: 'GET',
-                url: '/klien/' + id,
+                url: '/pekerjaan/' + id,
                 success: function(response) {
                     // console.log(response);
                     let result = response.data;
-                    $('#klienModal #nama').val(result.nama);
-                    $('#klienModal #alamat').val(result.alamat);
-                    $('#klienModal #nomor_hp').val(result.nomor_hp);
-                    $('#klienModal #npwp').val(result.npwp);
-                    $('#klienModal #id').val(result.id);
+                    $('#pekerjaanModal #id_klien').val(result.id_klien);
+                    $('#pekerjaanModal #nama_pekerjaan').val(result.nama_pekerjaan);
+                    $('#pekerjaanModal #kode').val(result.kode);
+                    $('#pekerjaanModal #id').val(result.id);
 
-                    $('#klienModal').modal('show');
-                    $('.modal-title').text('Update Data Klien');
+                    $('#pekerjaanModal').modal('show');
+                    $('.modal-title').text('Update Data Pekerjaan');
                     $('.btnSubmit').text('update');
 
                 },
@@ -348,8 +342,8 @@
         }
 
         //menghapus isi modal
-        $('#klienModal').on('hidden.bs.modal', function() {
-            let form = $('#klienForm');
+        $('#pekerjaanModal').on('hidden.bs.modal', function() {
+            let form = $('#pekerjaanForm');
             form[0].reset(); // reset input
             // reset validator
             if (form.data('validator')) {

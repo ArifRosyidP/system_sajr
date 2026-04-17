@@ -64,15 +64,22 @@
                 <x-sidebar></x-sidebar>
                 @if ($title === 'Produk')
                     @yield('products')
-                @endif
-                @if ($title === 'Klien')
+                @elseif ($title === 'Klien')
                     @yield('setup-klien')
+                @elseif ($title === 'Karoseri')
+                    @yield('setup-karoseri')
+                @elseif ($title === 'Pekerjaan')
+                    @yield('setup-pekerjaan')
+                @elseif ($title === 'PIC')
+                    @yield('setup-pic')
                 @endif
                 <x-footer></x-footer>
             </div>
             <!--end::App Wrapper-->
 
-            <x-modal></x-modal>
+            {{-- @yield('modal') --}}
+            {{-- <x-modal ></x-modal> --}}
+            <x-modal :clients="$clients ?? collect()" :pekerjaans="$pekerjaans ?? collect()" :suppliers="$suppliers ?? collect()"></x-modal>
         </body>
         <!--end::Body-->
     @endauth
@@ -131,10 +138,45 @@
 <script src="https://cdn.datatables.net/2.3.7/js/dataTables.js"></script>
 <script src="https://cdn.datatables.net/2.3.7/js/dataTables.bootstrap5.js"></script>
 
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        let swalData = localStorage.getItem('swal');
+
+        if (swalData) {
+            let data = JSON.parse(swalData);
+
+            Swal.fire({
+                title: data.title,
+                text: data.text,
+                icon: data.icon,
+                showConfirmButton: false,
+                timer: 1500
+            });
+
+            // hapus setelah dipakai
+            localStorage.removeItem('swal');
+        }
+    });
+</script>
+@if (session('alert'))
+    <script>
+        Swal.fire({
+            title: "{{ session('alert.title') }}",
+            text: "{{ session('alert.text') }}",
+            icon: "{{ session('alert.icon') }}",
+            showConfirmButton: false,
+            timer: 1500
+        });
+    </script>
+@endif
+
 @stack('ProdukJs')
 @stack('LoginJs')
 @stack('RegisterJs')
 @stack('KlienJs')
+@stack('KaroseriJs')
+@stack('PekerjaanJs')
+@stack('PicJs')
 
 
 
