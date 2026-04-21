@@ -23,11 +23,11 @@ return new class extends Migration
             $table->string('pajak')->nullable();
             $table->foreignUuid('id_supplier')->constrained('suppliers');
             $table->string('nama_barang');
-            $table->decimal('kuantitas');
+            $table->decimal('kuantitas',18,2);
             $table->string('satuan');
-            $table->decimal('harga_satuan');
-            $table->decimal('jumlah');
-            $table->decimal('transportasi')->nullable();
+            $table->decimal('harga_satuan',18,2);
+            $table->decimal('jumlah',18,2);
+            $table->decimal('transportasi',18,2)->nullable();
             $table->string('termofpayment');
             $table->date('tanggal_pengiriman');
             $table->foreignUuid('id_personincharge')->constrained('personincharges');
@@ -37,8 +37,8 @@ return new class extends Migration
             $table->date('tanggal_invoice')->nullable();
             $table->string('no_bukti')->nullable();
             $table->string('status')->nullable();
-            $table->decimal('total_po')->nullable();
-            $table->decimal('totalbayar_co')->nullable();
+            $table->decimal('total_po',18,2)->nullable();
+            $table->decimal('totalbayar_co',18,2)->nullable();
             $table->string('sisa_status')->nullable();
             $table->date('tanggal_bayar')->nullable();
             $table->boolean('dp1')->nullable();

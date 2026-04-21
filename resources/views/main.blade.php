@@ -16,12 +16,10 @@
     <!--end::Accessibility Meta Tags-->
 
     <!--begin::Primary Meta Tags-->
-    <meta name="title" content="AdminLTE 4 | Fixed Complete" />
-    <meta name="author" content="ColorlibHQ" />
-    <meta name="description"
-        content="AdminLTE is a Free Bootstrap 5 Admin Dashboard, 30 example pages using Vanilla JS. Fully accessible with WCAG 2.1 AA compliance." />
-    <meta name="keywords"
-        content="bootstrap 5, bootstrap, bootstrap 5 admin dashboard, bootstrap 5 dashboard, bootstrap 5 charts, bootstrap 5 calendar, bootstrap 5 datepicker, bootstrap 5 tables, bootstrap 5 datatable, vanilla js datatable, colorlibhq, colorlibhq dashboard, colorlibhq admin dashboard, accessible admin panel, WCAG compliant" />
+    <meta name="title" content="System SAJR | Sarana Abadi Jaya Raya" />
+    <meta name="author" content="aprasetyio" />
+    <meta name="description" content="Website pendataan PT Sarana Abadi Jaya Raya" />
+    <meta name="keywords" content="Laravel 13,bootstrap 5" />
     <!--end::Primary Meta Tags-->
 
     <!--begin::Fonts-->

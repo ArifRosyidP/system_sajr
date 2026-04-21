@@ -195,6 +195,32 @@
             calculateTotal();
         });
 
+        function calculateSisaStatus() {
+            let totalPO = parseFloat($('#total_po').val()) || 0;
+            let totalBayar = parseFloat($('#totalbayar_co').val()) || 0;
+            let sisaStatus = '';
+
+            if (!$('#totalbayar_co').val()) {
+                sisaStatus = '';
+            } else {
+                let selisih = totalPO - totalBayar;
+
+                if (Math.abs(selisih) <= 1000) {
+                    sisaStatus = 'Lunas';
+                } else if (selisih > 0) {
+                    sisaStatus = selisih.toLocaleString('id-ID');
+                } else if (selisih < 0) {
+                    sisaStatus = 'Over ' + Math.abs(selisih).toLocaleString('id-ID');
+                }
+            }
+
+            $('#sisa_status').val(sisaStatus);
+        }
+
+        $('#totalbayar_co, #total_po').on('input change', function() {
+            calculateSisaStatus();
+        });
+
         $.ajaxSetup({
             headers: {
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
