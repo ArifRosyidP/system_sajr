@@ -15,6 +15,7 @@ return new class extends Migration
             // $table->id();
             $table->uuid('id')->primary();
             $table->string('nomor_karoseri');
+            $table->foreignUuid('id_user')->constrained('users');
             $table->timestamps();
         });
     }

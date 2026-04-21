@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class Supplier extends Model
 {
     use HasUuids;
-    protected $fillable = ['id', 'nama_perusahaan', 'nama_pemilik', 'alamat', 'nomor_hp', 'npwp'];
+    protected $fillable = ['id', 'nama_perusahaan', 'nama_pemilik', 'alamat', 'nomor_hp', 'npwp', 'id_user'];
     public $incrementing = false;
     protected $keyType = 'string';
 }

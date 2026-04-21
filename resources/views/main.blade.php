@@ -76,6 +76,8 @@
                     @yield('setup-subkontraktor')
                 @elseif ($title === 'Supplier')
                     @yield('setup-supplier')
+                @elseif ($title === 'Purchase Order')
+                    @yield('purchase-order')
                 @endif
                 <x-footer></x-footer>
             </div>
@@ -83,7 +85,7 @@
 
             {{-- @yield('modal') --}}
             {{-- <x-modal ></x-modal> --}}
-            <x-modal :clients="$clients ?? collect()" :pekerjaans="$pekerjaans ?? collect()" :suppliers="$suppliers ?? collect()"></x-modal>
+            <x-modal :clients="$clients ?? collect()" :pekerjaans="$pekerjaans ?? collect()" :subkontraktors="$subkontraktors ?? collect()" :suppliers="$suppliers ?? collect()" :pics="$pics ?? collect()"></x-modal>
         </body>
         <!--end::Body-->
     @endauth
@@ -137,12 +139,24 @@
 
 <script src="https://code.jquery.com/jquery-4.0.0.min.js"
     integrity="sha256-OaVG6prZf4v69dPg6PhVattBXkcOWQB62pdZ3ORyrao=" crossorigin="anonymous"></script>
+
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
 <script src="https://cdn.datatables.net/2.3.7/js/dataTables.js"></script>
 <script src="https://cdn.datatables.net/2.3.7/js/dataTables.bootstrap5.js"></script>
 
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+
+
+
 <script>
+    flatpickr(".date-picker", {
+        dateFormat: "d-m-Y",
+        allowInput: true
+    });
+
+
     document.addEventListener('DOMContentLoaded', function() {
         let swalData = localStorage.getItem('swal');
 
@@ -183,6 +197,7 @@
 @stack('PicJs')
 @stack('SubkontraktorJs')
 @stack('SupplierJs')
+@stack('PurchaseOrderJs')
 
 
 

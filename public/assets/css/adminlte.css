@@ -10,6 +10,42 @@
     display: none !important;
 } */
 
+/* =========================================================== */
+
+.section-title {
+    border-bottom: 1px solid #dee2e6;
+    padding-bottom: 0.5rem;
+    margin-bottom: 1.25rem;
+    margin-top: 2rem;
+    color: #0d6efd;
+    font-weight: 600;
+}
+
+.section-title:first-of-type {
+    margin-top: 0;
+}
+
+#purchasingOrderModal .form-label {
+    margin-bottom: 0.35rem;
+    font-size: 0.875rem;
+    font-weight: 600;
+}
+
+#purchasingOrderModal .form-control,
+#purchasingOrderModal .form-select {
+    min-height: 44px;
+}
+
+#purchasingOrderModal textarea.form-control {
+    min-height: 90px;
+}
+
+#purchasingOrderModal .form-check {
+    padding-left: 2rem;
+}
+
+/* ============================================================== */
+
 table.dataTable th.no-sort .dt-column-order {
     display: none !important;
 }

@@ -7,6 +7,7 @@ use App\Models\Personincharge;
 use Exception;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
 use Illuminate\View\View;
 use Yajra\DataTables\Facades\DataTables;
@@ -25,6 +26,7 @@ class PersoninchargeController extends Controller
         $data = $request->validated();
         try {
             $data['id'] = Str::uuid();
+            $data['id_user'] = Auth::id();
             Personincharge::create($data);
             return response()->json([
                 'title' => "Berhasil!", 'text' => 'Berhasil menabahkan data PIC', 'icon' => "success"

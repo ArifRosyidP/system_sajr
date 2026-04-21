@@ -27,7 +27,8 @@
                 aria-label="Main navigation" data-accordion="false" id="navigation">
                 @if (auth()->user()->role == 'admin')
                     <li class="nav-item ">
-                        <a href="{{ route('home') }}" class="nav-link {{ request()->routeIs('home') ? 'active' : '' }}">
+                        <a href="{{ route('produk') }}"
+                            class="nav-link {{ request()->routeIs('produk') ? 'active' : '' }}">
                             <i class="nav-icon bi bi-palette"></i>
                             <p>Products</p>
                         </a>
@@ -37,13 +38,13 @@
                 <li class="nav-header">Purchase Order</li>
 
                 <li class="nav-item ">
-                    <a href="../generate/theme.html" class="nav-link {{ request()->is('po*') ? 'active' : '' }}">
+                    <a href="{{ route('home') }}" class="nav-link {{ request()->routeIs('home') ? 'active' : '' }}">
                         <i class="nav-icon bi bi-file-earmark-text-fill"></i>
                         <p>Purchase Order</p>
                     </a>
                 </li>
 
-                <li class="nav-item {{ request()->is('setup/*') ? 'menu-open' : '' }}">
+                <li class="nav-item {{ request()->routeIs('setup.*') ? 'menu-open' : '' }}">
                     <a href="#" class="nav-link">
                         <i class="nav-icon bi bi-gear-fill"></i>
                         <p>
@@ -54,42 +55,42 @@
                     <ul class="nav nav-treeview ps-3">
                         <li class="nav-item">
                             <a href="{{ route('setup.klien') }}"
-                                class="nav-link {{ request()->is('setup/klien*') ? 'active' : '' }}">
+                                class="nav-link {{ request()->routeIs('setup.klien') ? 'active' : '' }}">
                                 <i class="nav-icon bi bi-person-badge"></i>
                                 <p>Klien</p>
                             </a>
                         </li>
                         <li class="nav-item">
                             <a href="{{ route('setup.karoseri') }}"
-                                class="nav-link {{ request()->is('setup/karoseri*') ? 'active' : '' }}">
+                                class="nav-link {{ request()->routeIs('setup.karoseri') ? 'active' : '' }}">
                                 <i class="nav-icon bi bi-truck"></i>
                                 <p>Karoseri</p>
                             </a>
                         </li>
                         <li class="nav-item">
                             <a href="{{ route('setup.pekerjaan') }}"
-                                class="nav-link {{ request()->is('setup/pekerjaan*') ? 'active' : '' }}">
+                                class="nav-link {{ request()->routeIs('setup.pekerjaan') ? 'active' : '' }}">
                                 <i class="nav-icon bi bi-clipboard-check"></i>
                                 <p>Pekerjaan</p>
                             </a>
                         </li>
                         <li class="nav-item">
                             <a href="{{ route('setup.pic') }}"
-                                class="nav-link {{ request()->is('setup/pic*') ? 'active' : '' }}">
+                                class="nav-link {{ request()->routeIs('setup.pic') ? 'active' : '' }}">
                                 <i class="nav-icon bi bi-person-check"></i>
                                 <p>PIC</p>
                             </a>
                         </li>
                         <li class="nav-item">
                             <a href="{{ route('setup.subkontraktor') }}"
-                                class="nav-link {{ request()->is('setup/subkontraktor*') ? 'active' : '' }}">
+                                class="nav-link {{ request()->routeIs('setup.subkontraktor') ? 'active' : '' }}">
                                 <i class="nav-icon bi bi-diagram-3"></i>
                                 <p>Subkontraktor</p>
                             </a>
                         </li>
                         <li class="nav-item">
                             <a href="{{ route('setup.supplier') }}"
-                                class="nav-link {{ request()->is('setup/supplier*') ? 'active' : '' }}">
+                                class="nav-link {{ request()->routeIs('setup.supplier') ? 'active' : '' }}">
                                 <i class="nav-icon bi bi-box-seam"></i>
                                 <p>Supplier</p>
                             </a>

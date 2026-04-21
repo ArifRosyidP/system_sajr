@@ -4,6 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class ClientRequest extends FormRequest
 {
@@ -23,7 +24,8 @@ class ClientRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'nama' => 'required|min:3|max:255',
+            'nama' => ['required','min:3','max:255',Rule::unique('clients', 'nama')
+                    ->ignore($this->id, 'id')],
             'alamat' => 'nullable|string|min:10|max:255|regex:/^[a-zA-Z0-9\s.,\-\/#()]+$/',
             // 'nomor_hp' => 'required|string|max:20',
             // 'nomor_hp' => 'nullable|regex:/^(\+62|62|0)8[1-9][0-9]{6,9}$/',

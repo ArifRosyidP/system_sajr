@@ -8,6 +8,7 @@ use Exception;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use Yajra\DataTables\Facades\DataTables;
@@ -48,6 +49,7 @@ class ProductController extends Controller
 
             $data['id'] = Str::uuid();
             $data['slug'] = Str::slug($data['name']);
+            $data['id_user'] = Auth::id();
             Product::create($data);
             return response()->json([
                 'title' => "Good job!", 'text' => 'Product added successfully', 'icon' => "success"

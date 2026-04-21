@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class Karoseri extends Model
 {
     use HasUuids;
-    protected $fillable = ['id', 'nomor_karoseri'];
+    protected $fillable = ['id', 'nomor_karoseri', 'id_user'];
     public $incrementing = false;
     protected $keyType = 'string';
 }

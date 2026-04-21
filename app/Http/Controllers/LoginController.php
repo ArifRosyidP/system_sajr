@@ -25,8 +25,8 @@ class LoginController extends Controller
         $check = User::where('email', '=', $request['email'] )->first();
         $credentials = $request->validate(['email'=>['required'],'password'=>['required'],]);
         if(Auth::attemptWhen($credentials)){
-            $request->session()->regenerate();
-            if(Auth::user()->role == "admin"){
+            // $request->session()->regenerate();
+            if(Auth::user()->role === "admin"){
                 $request->session()->regenerate();
                 return redirect()->intended('/')->with([
                     'alert' => [
@@ -37,7 +37,7 @@ class LoginController extends Controller
                 ]);
             }else{
                 $request->session()->regenerate();
-                return redirect()->intended('setup/klien')->
+                return redirect()->intended('/')->
                 with([
                     'alert' => [
                         'title' => 'Login Berhasil',

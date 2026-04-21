@@ -4,6 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class SubkontraktorRequest extends FormRequest
 {
@@ -23,7 +24,8 @@ class SubkontraktorRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'nama' => 'required|min:3|max:255',
+            'nama' => ['required','min:3','max:255',Rule::unique('subkontraktors', 'nama')
+                    ->ignore($this->id, 'id')],
             'alamat' => 'nullable|string|min:10|max:255|regex:/^[a-zA-Z0-9\s.,\-\/#()]+$/',
             // 'nomor_hp' => 'required|string|max:20',
             'nomor_hp' => 'nullable|string|max:20',

@@ -119,7 +119,7 @@
                 serverSide: true,
                 responsive: true,
                 align: 'center',
-                ajax: '/dataTable',
+                ajax: 'products/dataTable',
                 columns: [{
                         data: 'DT_RowIndex',
                         name: 'DT_RowIndex'

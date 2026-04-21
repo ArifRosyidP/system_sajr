@@ -19,6 +19,7 @@ return new class extends Migration
             $table->string('description');
             $table->float('price');
             $table->string('image')->nullable();
+            $table->foreignUuid('id_user')->constrained('users');
             $table->timestamps();
         });
     }

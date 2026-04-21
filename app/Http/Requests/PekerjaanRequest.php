@@ -4,6 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class PekerjaanRequest extends FormRequest
 {
@@ -23,7 +24,8 @@ class PekerjaanRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'nama_pekerjaan' => 'required|min:3|max:255',
+            'nama_pekerjaan' => ['required','min:3','max:255',Rule::unique('pekerjaans', 'nama_pekerjaan')
+                    ->ignore($this->id, 'id')],
             'kode' => 'nullable|string|min:3|max:255',
             'id_klien' => 'required|string|exists:clients,id',
         ];

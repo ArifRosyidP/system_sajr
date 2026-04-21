@@ -8,6 +8,7 @@ use App\Models\Pekerjaan;
 use Exception;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
 use Illuminate\View\View;
 use Yajra\DataTables\Facades\DataTables;
@@ -32,6 +33,7 @@ class PekerjaanController extends Controller
         $data = $request->validated();
         try {
             $data['id'] = Str::uuid();
+            $data['id_user'] = Auth::id();
             Pekerjaan::create($data);
             return response()->json([
                 'title' => "Berhasil!", 'text' => 'Berhasil menabahkan data karoseri', 'icon' => "success"
@@ -92,7 +94,7 @@ class PekerjaanController extends Controller
 
     public function serversideTable(Request $request){
         // $pekerjaan = Pekerjaan::get();
-        $pekerjaan = Pekerjaan::with('client')->get();
+        $pekerjaan = Pekerjaan::get();
         return DataTables::of($pekerjaan)
         ->addIndexColumn()
         ->editColumn('id_klien', function ($row) {
@@ -106,6 +108,26 @@ class PekerjaanController extends Controller
         })
         ->rawColumns(['action'])
         ->make();
+    }
+
+    public function getPekerjaan($clientId)
+    {
+        try {
+        $pekerjaan = Pekerjaan::select('id', 'nama_pekerjaan')
+            ->where('id_klien', $clientId)
+            ->orderBy('nama_pekerjaan')
+            ->get();
+
+        return response()->json($pekerjaan);
+
+        } catch (\Throwable $e) {
+            return response()->json([
+                'error' => true,
+                'message' => $e->getMessage(),
+                'line' => $e->getLine(),
+                'file' => $e->getFile(),
+            ], 500);
+        }
     }
     
 }

@@ -4,6 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class SupplierRequest extends FormRequest
 {
@@ -23,7 +24,8 @@ class SupplierRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'nama_perusahaan' => 'required|min:3|max:255',
+            'nama_perusahaan' => ['required','min:3','max:255',Rule::unique('suppliers', 'nama_perusahaan')
+                    ->ignore($this->id, 'id')],
             'nama_pemilik' => 'nullable|min:3|max:255',
             'alamat' => 'nullable|string|min:10|max:255|regex:/^[a-zA-Z0-9\s.,\-\/#()]+$/',
             // 'nomor_hp' => 'required|string|max:20',

@@ -1,6 +1,6 @@
 @extends('main')
 
-@section('setup-supplier')
+@section('purchase-order')
     <!--begin::App Main-->
     <main class="app-main">
         <!--begin::App Content Header-->
@@ -14,7 +14,7 @@
                     </div>
                     <div class="col-sm-6">
                         <ol class="breadcrumb float-sm-end">
-                            <li class="breadcrumb-item"><a href="#">Home</a></li>
+                            <li class="breadcrumb-item"><a href="{{ route('home') }}">Home</a></li>
                             <li class="breadcrumb-item active" aria-current="page">{{ $title }}</li>
                         </ol>
                     </div>
@@ -52,16 +52,42 @@
                             <div class="card-body">
 
                                 <button class="btn btn-primary mb-1" style="width: 100px"
-                                    onclick="showModalSupplier()">Add</button>
-                                <table class="table table-bordered table-striped" id="tableSupplier">
+                                    onclick="showModalPurchasingOrder()">Add</button>
+
+                                <table class="table table-bordered table-striped" id="tablePurchasingOrder">
                                     <thead>
                                         <tr>
                                             <th>No</th>
-                                            <th>Perusahaan</th>
-                                            <th>Owner</th>
-                                            <th>Alamat</th>
-                                            <th>Nomor HP</th>
-                                            <th>NPWP</th>
+                                            <th>Tanggal PO</th>
+                                            <th>Klien</th>
+                                            <th>Pekerjaan</th>
+                                            <th>Subkontraktor</th>
+                                            <th>Nomor PO</th>
+                                            <th>Pajak</th>
+                                            <th>Supplier</th>
+                                            <th>Nama Barang</th>
+                                            <th>Qty</th>
+                                            <th>Sat</th>
+                                            <th>Harga Sat</th>
+                                            <th>Jumlah</th>
+                                            <th>Transport</th>
+                                            <th>Term Of Payment</th>
+                                            <th>Tanggal Pengiriman</th>
+                                            <th>PIC</th>
+                                            <th>Tujuan</th>
+                                            <th>Catatan</th>
+                                            <th>Invoice</th>
+                                            <th>Tanggal Invoice</th>
+                                            <th>Nomor Bukti</th>
+                                            <th>Status</th>
+                                            <th>Total PO</th>
+                                            <th>Total Bayar CO</th>
+                                            <th>Sisa / Status</th>
+                                            <th>Tanggal Bayar</th>
+                                            <th>DP1</th>
+                                            <th>Pelunasan1</th>
+                                            <th>DP2</th>
+                                            <th>Pelunasan2</th>
                                             <th width="15%">Action</th>
                                         </tr>
                                     </thead>
@@ -71,7 +97,11 @@
                                 </table>
 
 
+
                             </div>
+
+
+
                             <!-- /.card-body -->
                             <div class="card-footer">Footer</div>
                             <!-- /.card-footer-->
@@ -89,12 +119,12 @@
 @endsection
 
 
-@push('SupplierJs')
+@push('PurchaseOrderJs')
     <!-- Laravel Javascript Validation -->
     <script type="text/javascript" src="{{ asset('vendor/jsvalidation/js/jsvalidation.js') }}"></script>
     {!! \Proengsoft\JsValidation\Facades\JsValidatorFacade::formRequest(
-        'App\Http\Requests\SupplierRequest',
-        '#supplierForm',
+        'App\Http\Requests\PurchasingorderRequest',
+        '#purchasingOrderForm',
     ) !!}
     {{-- {!! JsValidator::formRequest('App\Http\Requests\ProductRequest', '#productForm') !!} --}}
 
@@ -102,6 +132,69 @@
         // new DataTable('#tableProduct', {
         //     responsive: true
         // });
+
+        function formatTanggal(tanggal) {
+            if (!tanggal) return '';
+
+            let parts = tanggal.split('-');
+            return `${parts[2]}-${parts[1]}-${parts[0]}`;
+        }
+
+        function loadPekerjaan(clientId, selectedPekerjaan = null) {
+            const pekerjaanSelect = $('#purchasingOrderModal #id_pekerjaan');
+
+            pekerjaanSelect.html('<option value="">Loading...</option>');
+
+            if (!clientId) {
+                pekerjaanSelect.html('<option value="">Pilih Pekerjaan</option>');
+                return;
+            }
+
+            $.ajax({
+                url: '/get-pekerjaan/' + encodeURIComponent(clientId),
+                // url: '/get-pekerjaan/' + clientId,
+                type: 'GET',
+                dataType: 'json',
+                success: function(response) {
+                    let options = '<option value="" disabled selected>Pilih Pekerjaan</option>';
+
+                    response.forEach(function(item) {
+                        let selected = selectedPekerjaan == item.id ? 'selected' : '';
+                        options +=
+                            `<option value="${item.id}" ${selected}>${item.nama_pekerjaan}</option>`;
+                    });
+
+                    pekerjaanSelect.html(options);
+                },
+                error: function(xhr) {
+                    console.log('Backend error:', xhr.responseText);
+                    pekerjaanSelect.html('<option value="">Gagal memuat data</option>');
+                }
+            });
+        }
+
+        function calculateTotal() {
+            let qty = parseFloat($('#kuantitas').val()) || 0;
+            let harga = parseFloat($('#harga_satuan').val()) || 0;
+            let transport = parseFloat($('#transportasi').val()) || 0;
+            let jumlah = qty * harga;
+
+            $('#jumlah').val(jumlah.toFixed(2));
+
+            let pajak = $('#pajak').val();
+            let total_po = jumlah + transport;
+
+            if (pajak === 'PPN') {
+                total_po += jumlah * 0.11;
+            }
+
+            $('#total_po').val(total_po.toFixed(2));
+        }
+
+        $('#kuantitas, #harga_satuan, #pajak, #transportasi').on('input change', function() {
+            calculateTotal();
+        });
+
         $.ajaxSetup({
             headers: {
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -110,44 +203,199 @@
 
         let save_method;
         $(document).ready(function() {
-            picTable();
+            poTable();
+            $('#purchasingOrderModal #id_klien').on('change', function() {
+                let clientId = $(this).val();
+                loadPekerjaan(clientId);
+            });
         });
 
-        function picTable() {
-            $('#tableSupplier').DataTable({
+        function poTable() {
+            $('#tablePurchasingOrder').DataTable({
                 columnDefs: [{
-                    orderable: false,
-                    targets: [0, 5],
-                    className: 'no-sort',
-                }],
+                        targets: 0,
+                        width: "50px",
+                        className: ["no-sort", "text-center"],
+                        orderable: false,
+                    },
+                    {
+                        targets: 1,
+                        width: "120px",
+                        className: "text-center"
+                    },
+                    {
+                        targets: 2,
+                        width: "150px",
+                        className: "text-center"
+                    },
+                    {
+                        targets: 3,
+                        width: "150px",
+                        className: "text-center"
+                    },
+                    {
+                        targets: 4,
+                        width: "150px",
+                        className: "text-center"
+                    },
+                    {
+                        targets: 5,
+                        width: "150px",
+                        className: "text-center"
+                    },
+                    {
+                        targets: 8,
+                        width: "150px",
+                        className: "text-center"
+                    },
+                    {
+                        targets: 18,
+                        width: "150px",
+                        className: "text-center"
+                    },
+                    {
+                        targets: 31,
+                        width: "120px",
+                        className: ["no-sort", "text-center"],
+                        orderable: false,
+                    },
+                    // {
+                    //     orderable: false,
+                    //     targets: [0, 31],
+                    //     className: ["no-sort"],
+                    // }
+                ],
                 processing: true,
                 serverSide: true,
-                responsive: true,
-                align: 'center',
-                ajax: '/setup/supplier/dataTable',
+                scrollX: true,
+                autoWidth: false,
+                responsive: false,
+                // responsive: true,
+                // align: 'center',
+                ajax: '/dataTable',
                 columns: [{
                         data: 'DT_RowIndex',
                         name: 'DT_RowIndex'
                     },
                     {
-                        data: 'nama_perusahaan',
-                        name: 'nama_perusahaan'
+                        data: 'tanggal_po',
+                        name: 'tanggal_po'
                     },
                     {
-                        data: 'nama_pemilik',
-                        name: 'nama_pemilik'
+                        data: 'id_klien',
+                        name: 'id_klien'
                     },
                     {
-                        data: 'alamat',
-                        name: 'alamat'
+                        data: 'id_pekerjaan',
+                        name: 'id_pekerjaan'
                     },
                     {
-                        data: 'nomor_hp',
-                        name: 'nomor_hp'
+                        data: 'id_subkontraktor',
+                        name: 'id_subkontraktor'
                     },
                     {
-                        data: 'npwp',
-                        name: 'npwp'
+                        data: 'nomor_po',
+                        name: 'nomor_po'
+                    },
+                    {
+                        data: 'pajak',
+                        name: 'pajak'
+                    },
+                    {
+                        data: 'id_supplier',
+                        name: 'id_supplier'
+                    },
+                    {
+                        data: 'nama_barang',
+                        name: 'nama_barang'
+                    },
+                    {
+                        data: 'kuantitas',
+                        name: 'kuantitas'
+                    },
+                    {
+                        data: 'satuan',
+                        name: 'satuan'
+                    },
+                    {
+                        data: 'harga_satuan',
+                        name: 'harga_satuan'
+                    },
+                    {
+                        data: 'jumlah',
+                        name: 'jumlah'
+                    },
+                    {
+                        data: 'transportasi',
+                        name: 'transportasi'
+                    },
+                    {
+                        data: 'termofpayment',
+                        name: 'termofpayment'
+                    },
+                    {
+                        data: 'tanggal_pengiriman',
+                        name: 'tanggal_pengiriman'
+                    },
+                    {
+                        data: 'id_personincharge',
+                        name: 'id_personincharge'
+                    },
+                    {
+                        data: 'tujuan',
+                        name: 'tujuan'
+                    },
+                    {
+                        data: 'catatan',
+                        name: 'catatan'
+                    },
+                    {
+                        data: 'invoice',
+                        name: 'invoice'
+                    },
+                    {
+                        data: 'tanggal_invoice',
+                        name: 'tanggal_invoice'
+                    },
+                    {
+                        data: 'no_bukti',
+                        name: 'no_bukti'
+                    },
+                    {
+                        data: 'status',
+                        name: 'status'
+                    },
+                    {
+                        data: 'total_po',
+                        name: 'total_po'
+                    },
+                    {
+                        data: 'totalbayar_co',
+                        name: 'totalbayar_co'
+                    },
+                    {
+                        data: 'sisa_status',
+                        name: 'sisa_status'
+                    },
+                    {
+                        data: 'tanggal_bayar',
+                        name: 'tanggal_bayar'
+                    },
+                    {
+                        data: 'dp1',
+                        name: 'dp1'
+                    },
+                    {
+                        data: 'pelunasan1',
+                        name: 'pelunasan1'
+                    },
+                    {
+                        data: 'dp2',
+                        name: 'dp2'
+                    },
+                    {
+                        data: 'pelunasan2',
+                        name: 'pelunasan2'
                     },
                     {
 
@@ -158,25 +406,25 @@
             });
         }
 
-        function showModalSupplier() {
-            $('#supplierModal').modal('show');
-            $('.modal-title').text('Tambah Data Supplier');
+        function showModalPurchasingOrder() {
+            $('#purchasingOrderModal').modal('show');
+            $('.modal-title').text('Tambah Data Purchasing Order');
             $('.btnSubmit').text('Tambah Data');
 
             save_method = 'add';
         }
 
         //tabel product
-        $('#supplierForm').on('submit', function(e) {
+        $('#purchasingOrderForm').on('submit', function(e) {
             e.preventDefault();
             const formData = new FormData(this)
 
             let url, method;
-            url = '/supplier';
+            url = '/purchasing-order';
             method = 'POST';
 
             if (save_method == 'update') {
-                url = '/supplier/' + $('#supplierForm #id').val();
+                url = '/purchasing-order/' + $('#purchasingOrderModal #id').val();
                 formData.append('_method', 'PUT');
                 // method = 'PUT';
             }
@@ -189,8 +437,8 @@
                 processData: false,
                 contentType: false,
                 success: function(response) {
-                    $('#supplierModal').modal('hide');
-                    $('#tableSupplier').DataTable().ajax.reload();
+                    $('#purchasingOrderModal').modal('hide');
+                    $('#tablePurchasingOrder').DataTable().ajax.reload();
                     Swal.fire({
                         title: response.title,
                         text: response.text,
@@ -200,6 +448,7 @@
                     });
                 },
                 error: function(jqXHR) {
+                    console.log(jqXHR.responseJSON);
                     if (jqXHR.status === 422) {
                         let errors = jqXHR.responseJSON.errors;
                         let message = '';
@@ -250,10 +499,10 @@
                 if (result.isConfirmed) {
                     $.ajax({
                         type: 'DELETE',
-                        url: '/supplier/' + id,
+                        url: '/purchasing-order/' + id,
                         dataType: 'json',
                         success: function(response) {
-                            $('#tableSupplier').DataTable().ajax.reload();
+                            $('#tablePurchasingOrder').DataTable().ajax.reload();
                             Swal.fire({
                                 title: response.title,
                                 text: response.text,
@@ -304,19 +553,47 @@
 
             $.ajax({
                 type: 'GET',
-                url: '/supplier/' + id,
+                url: '/purchasing-order/' + id,
                 success: function(response) {
                     // console.log(response);
                     let result = response.data;
-                    $('#supplierModal #nama_perusahaan').val(result.nama_perusahaan);
-                    $('#supplierModal #nama_pemilik').val(result.nama_pemilik);
-                    $('#supplierModal #alamat').val(result.alamat);
-                    $('#supplierModal #nomor_hp').val(result.nomor_hp);
-                    $('#supplierModal #npwp').val(result.npwp);
-                    $('#supplierModal #id').val(result.id);
+                    $('#purchasingOrderModal #tanggal_po').val(formatTanggal(result.tanggal_po));
+                    $('#purchasingOrderModal #id_klien').val(result.id_klien);
+                    loadPekerjaan(result.id_klien, result.id_pekerjaan);
+                    // $('#purchasingOrderModal #id_pekerjaan').val(result.id_pekerjaan);
+                    $('#purchasingOrderModal #id_subkontraktor').val(result.id_subkontraktor);
+                    $('#purchasingOrderModal #nomor_po').val(result.nomor_po);
+                    $('#purchasingOrderModal #pajak').val(result.pajak);
+                    $('#purchasingOrderModal #pajak').val(result.pajak);
+                    $('#purchasingOrderModal #id_supplier').val(result.id_supplier);
+                    $('#purchasingOrderModal #nama_barang').val(result.nama_barang);
+                    $('#purchasingOrderModal #kuantitas').val(result.kuantitas);
+                    $('#purchasingOrderModal #satuan').val(result.satuan);
+                    $('#purchasingOrderModal #harga_satuan').val(result.harga_satuan);
+                    $('#purchasingOrderModal #jumlah').val(result.jumlah);
+                    $('#purchasingOrderModal #transportasi').val(result.transportasi);
+                    $('#purchasingOrderModal #termofpayment').val(result.termofpayment);
+                    $('#purchasingOrderModal #tanggal_pengiriman').val(formatTanggal(result
+                        .tanggal_pengiriman));
+                    $('#purchasingOrderModal #id_personincharge').val(result.id_personincharge);
+                    $('#purchasingOrderModal #tujuan').val(result.tujuan);
+                    $('#purchasingOrderModal #catatan').val(result.catatan);
+                    $('#purchasingOrderModal #invoice').val(result.invoice);
+                    $('#purchasingOrderModal #tanggal_invoice').val(formatTanggal(result.tanggal_invoice));
+                    $('#purchasingOrderModal #no_bukti').val(result.no_bukti);
+                    $('#purchasingOrderModal #status').val(result.status);
+                    $('#purchasingOrderModal #total_po').val(result.total_po);
+                    $('#purchasingOrderModal #totalbayar_co').val(result.totalbayar_co);
+                    $('#purchasingOrderModal #sisa_status').val(result.sisa_status);
+                    $('#purchasingOrderModal #tanggal_bayar').val(formatTanggal(result.tanggal_bayar));
+                    $('#purchasingOrderModal #dp1').prop('checked', result.dp1 == 1);
+                    $('#purchasingOrderModal #pelunasan1').prop('checked', result.pelunasan1 == 1);
+                    $('#purchasingOrderModal #dp2').prop('checked', result.dp2 == 1);
+                    $('#purchasingOrderModal #pelunasan2').prop('checked', result.pelunasan2 == 1);
+                    $('#purchasingOrderModal #id').val(result.id);
 
-                    $('#supplierModal').modal('show');
-                    $('.modal-title').text('Update Data Supplier');
+                    $('#purchasingOrderModal').modal('show');
+                    $('.modal-title').text('Update Data Purchasing Order');
                     $('.btnSubmit').text('update');
 
                 },
@@ -352,8 +629,8 @@
         }
 
         //menghapus isi modal
-        $('#supplierModal').on('hidden.bs.modal', function() {
-            let form = $('#supplierForm');
+        $('#purchasingOrderModal').on('hidden.bs.modal', function() {
+            let form = $('#purchasingOrderForm');
             form[0].reset(); // reset input
             // reset validator
             if (form.data('validator')) {

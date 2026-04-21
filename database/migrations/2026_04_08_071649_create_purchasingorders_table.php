@@ -21,7 +21,7 @@ return new class extends Migration
             $table->foreignUuid('id_subkontraktor')->nullable()->constrained('subkontraktors');
             $table->string('nomor_po');
             $table->string('pajak')->nullable();
-            $table->foreignUuid('id_suplier')->constrained('suppliers');
+            $table->foreignUuid('id_supplier')->constrained('suppliers');
             $table->string('nama_barang');
             $table->decimal('kuantitas');
             $table->string('satuan');
@@ -45,6 +45,7 @@ return new class extends Migration
             $table->boolean('pelunasan1')->nullable();
             $table->boolean('dp2')->nullable();
             $table->boolean('pelunasan2')->nullable();
+            $table->foreignUuid('id_user')->constrained('users');
             $table->timestamps();
         });
     }

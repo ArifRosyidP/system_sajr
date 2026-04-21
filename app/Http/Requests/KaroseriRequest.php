@@ -4,6 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class KaroseriRequest extends FormRequest
 {
@@ -23,7 +24,8 @@ class KaroseriRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'nomor_karoseri' => 'required|string|min:8|max:255',
+            'nomor_karoseri' => ['required','string','min:8','max:255',Rule::unique('karoseris', 'nomor_karoseri')
+                    ->ignore($this->id, 'id')],
         ];
     }
 }

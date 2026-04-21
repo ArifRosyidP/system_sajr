@@ -4,6 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class PurchasingorderRequest extends FormRequest
 {
@@ -23,19 +24,20 @@ class PurchasingorderRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'tanggal_po' => 'required|date',
+            'tanggal_po' => 'required|date|after_or_equal:today',
             'id_klien' => 'required|exists:clients,id',
             'id_pekerjaan' => 'nullable|exists:pekerjaans,id',
             'id_subkontraktor' => 'nullable|exists:subkontraktors,id',
-            'nomor_po' => 'required|string|max:50',
-            'pajak' => 'nullable|string|max:3',
-            'id_suplier' => 'required|exists:supliers,id',
-            'nama_barang' => 'required|string|exists:suplier,id',
+            'nomor_po' => ['required','string','max:50',Rule::unique('purchasingorders', 'nomor_po')
+                    ->ignore($this->id, 'id'),],
+            'pajak' => 'nullable|string|max:10',
+            'id_supplier' => 'required|exists:suppliers,id',
+            'nama_barang' => 'required|string',
             'kuantitas' => 'required|numeric|min:1',
             'satuan' => 'required|string|min:2|max:50',
             'harga_satuan' => 'required|numeric|min:0',
             'jumlah' => 'required|numeric|min:0', // hati hati eror disini
-            'transprtasi' => 'nullable|numeric|min:0',
+            'transportasi' => 'nullable|numeric|min:0',
             'termofpayment' => 'required|string|min:3|max:50',
             'tanggal_pengiriman' => 'required|date|after_or_equal:tanggal_po',
             'id_personincharge' => 'required|exists:personincharges,id',
@@ -52,7 +54,7 @@ class PurchasingorderRequest extends FormRequest
             'dp1' => 'nullable|boolean',
             'pelunasan1' => 'nullable|boolean',
             'dp2' => 'nullable|boolean',
-            'pelunasan2' => 'nullable|boolean'
+            'pelunasan2' => 'nullable|boolean',
         ];
     }
 }

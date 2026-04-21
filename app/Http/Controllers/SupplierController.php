@@ -7,6 +7,7 @@ use App\Models\Supplier;
 use Exception;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
 use Illuminate\View\View;
 use Yajra\DataTables\Facades\DataTables;
@@ -24,6 +25,7 @@ class SupplierController extends Controller
         $data = $request->validated();
         try {
             $data['id'] = Str::uuid();
+            $data['id_user'] = Auth::id();
             Supplier::create($data);
             return response()->json([
                 'title' => "Berhasil!", 'text' => 'Berhasil menabahkan data Supplier', 'icon' => "success"
