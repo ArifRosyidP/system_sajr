@@ -1,12 +1,21 @@
 {{-- {{ dd($title) }} --}}
 
 <!doctype html>
-<html lang="en">
+<html lang="en" id="appTheme" data-bs-theme="light">
 <!--begin::Head-->
 
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <title>{{ $title }}</title>
+    <link rel="icon" type="image/png" href="{{ asset('assets/img/logo SAJR.png') }}">
+
+    <script>
+        (function() {
+            const savedTheme = localStorage.getItem('theme') || 'light';
+            document.documentElement.setAttribute('data-bs-theme', savedTheme);
+        })();
+    </script>
+
 
     <!--begin::Accessibility Meta Tags-->
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
@@ -55,7 +64,7 @@
 @else
     @auth
 
-        <body class="layout-fixed fixed-header fixed-footer sidebar-expand-lg bg-body-tertiary">
+        <body id="appBody" class="layout-fixed fixed-header fixed-footer sidebar-expand-lg bg-body-tertiary">
             <!--begin::App Wrapper-->
             <div class="app-wrapper">
                 <x-header></x-header>
@@ -84,11 +93,11 @@
             {{-- @yield('modal') --}}
             {{-- <x-modal ></x-modal> --}}
             <x-modal :clients="$clients ?? collect()" :pekerjaans="$pekerjaans ?? collect()" :subkontraktors="$subkontraktors ?? collect()" :suppliers="$suppliers ?? collect()" :pics="$pics ?? collect()"></x-modal>
+
         </body>
         <!--end::Body-->
     @endauth
 @endif
-
 
 
 <!--begin::Script-->
@@ -134,7 +143,6 @@
 <!--end::OverlayScrollbars Configure-->
 <!--end::Script-->
 
-
 <script src="https://code.jquery.com/jquery-4.0.0.min.js"
     integrity="sha256-OaVG6prZf4v69dPg6PhVattBXkcOWQB62pdZ3ORyrao=" crossorigin="anonymous"></script>
 
@@ -146,9 +154,62 @@
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
 <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
 
-
+<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 
 <script>
+    document.addEventListener("DOMContentLoaded", function() {
+        const html = document.documentElement;
+        const themeSwitch = document.getElementById("themeSwitch");
+
+        if (!themeSwitch) return;
+
+        const savedTheme = localStorage.getItem("theme") || "light";
+
+        html.setAttribute("data-bs-theme", savedTheme);
+        themeSwitch.checked = savedTheme === "dark";
+
+        themeSwitch.addEventListener("change", function() {
+            const theme = this.checked ? "dark" : "light";
+
+            html.setAttribute("data-bs-theme", theme);
+            localStorage.setItem("theme", theme);
+
+            refreshPluginsTheme();
+        });
+
+        function refreshPluginsTheme() {
+            // refresh select2
+            $('.searchable-select').each(function() {
+                const value = $(this).val();
+
+                $(this).select2('destroy').select2({
+                    width: '100%',
+                    dropdownParent: $('#purchasingOrderModal')
+                });
+
+                $(this).val(value).trigger('change');
+            });
+
+            // refresh datatable
+            if ($.fn.DataTable.isDataTable('#tablePurchasingOrder')) {
+                $('#tablePurchasingOrder').DataTable().columns.adjust().draw(false);
+            }
+        }
+    });
+</script>
+
+<script>
+    $(document).ready(function() {
+        $('.searchable-select').select2({
+            tags: true,
+            placeholder: 'Pilih atau ketik',
+            allowClear: true,
+            width: '100%',
+            dropdownParent: $('#purchasingOrderModal')
+        });
+    });
+
     flatpickr(".date-picker", {
         dateFormat: "d-m-Y",
         allowInput: true
@@ -162,6 +223,7 @@
             let data = JSON.parse(swalData);
 
             Swal.fire({
+                theme: 'bootstrap-5',
                 title: data.title,
                 text: data.text,
                 icon: data.icon,
@@ -177,6 +239,7 @@
 @if (session('alert'))
     <script>
         Swal.fire({
+            theme: 'bootstrap-5',
             title: "{{ session('alert.title') }}",
             text: "{{ session('alert.text') }}",
             icon: "{{ session('alert.icon') }}",

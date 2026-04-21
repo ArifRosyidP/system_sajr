@@ -336,7 +336,7 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
             </div>
 
-            <div class="modal-body">
+            <div class="modal-body custom-form">
                 <form id="purchasingOrderForm" enctype="multipart/form-data">
                     @csrf
                     <input type="hidden" name="id" id="id">
@@ -371,7 +371,7 @@
                         <div class="col-md-4">
                             <label class="form-label fw-semibold small">Pekerjaan</label>
                             <select name="id_pekerjaan" id="id_pekerjaan" class="form-select">
-                                <option value="" disabled selected>Pilih Pekerjaan</option>
+                                <option value="" disabled selected>Pilih Klien Terlebih Dahulu</option>
                             </select>
                             {{-- <select name="id_pekerjaan" id="id_pekerjaan" class="form-select">
                                     <option value="">Pilih Pekerjaan</option>
@@ -456,7 +456,7 @@
                     <div class="row g-3">
                         <div class="col-md-4">
                             <label class="form-label fw-semibold small">Term Of Payment</label>
-                            <select name="termofpayment" id="termofpayment" class="form-select">
+                            <select name="termofpayment" id="termofpayment" class="form-select searchable-select">
                                 <option value="" disabled selected>Pilih Term Of Payment</option>
                                 <option value="CBD">CBD</option>
                                 <option value="Net 7">Net 7</option>
@@ -584,7 +584,7 @@
 
                 </form>
             </div>
-            <div class="modal-footer bg-light sticky-bottom">
+            <div class="modal-footer sticky-bottom bg-body-tertiary">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
                 <button type="submit" form="purchasingOrderForm" class="btn btn-primary btnSubmit"></button>
             </div>

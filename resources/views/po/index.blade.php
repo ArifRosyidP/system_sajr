@@ -128,10 +128,24 @@
     ) !!}
     {{-- {!! JsValidator::formRequest('App\Http\Requests\ProductRequest', '#productForm') !!} --}}
 
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0/dist/css/select2.min.css" rel="stylesheet" />
+    <link href="https://cdn.jsdelivr.net/npm/select2-bootstrap-5-theme@1.3.0/dist/select2-bootstrap-5-theme.min.css"
+        rel="stylesheet" />
+
+
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0/dist/js/select2.min.js"></script>
+
     <script>
         // new DataTable('#tableProduct', {
         //     responsive: true
         // });
+        $('#kuantitas, #harga_satuan, #pajak, #transportasi').on('input change', function() {
+            calculateTotal();
+        });
+
+        $('#totalbayar_co, #total_po').on('input change', function() {
+            calculateSisaStatus();
+        });
 
         function formatTanggal(tanggal) {
             if (!tanggal) return '';
@@ -146,7 +160,7 @@
             pekerjaanSelect.html('<option value="">Loading...</option>');
 
             if (!clientId) {
-                pekerjaanSelect.html('<option value="">Pilih Pekerjaan</option>');
+                pekerjaanSelect.html('<option value="">Pilih Klien Terlebih Dahulu</option>');
                 return;
             }
 
@@ -191,10 +205,6 @@
             $('#total_po').val(total_po.toFixed(2));
         }
 
-        $('#kuantitas, #harga_satuan, #pajak, #transportasi').on('input change', function() {
-            calculateTotal();
-        });
-
         function calculateSisaStatus() {
             let totalPO = parseFloat($('#total_po').val()) || 0;
             let totalBayar = parseFloat($('#totalbayar_co').val()) || 0;
@@ -216,10 +226,6 @@
 
             $('#sisa_status').val(sisaStatus);
         }
-
-        $('#totalbayar_co, #total_po').on('input change', function() {
-            calculateSisaStatus();
-        });
 
         $.ajaxSetup({
             headers: {
@@ -278,6 +284,30 @@
                         targets: 18,
                         width: "150px",
                         className: "text-center"
+                    },
+                    {
+                        targets: 27,
+                        width: "50px",
+                        className: ["no-sort", "text-center", 'text-center align-middle', ],
+                        orderable: false,
+                    },
+                    {
+                        targets: 28,
+                        width: "50px",
+                        className: ["no-sort", "text-center", 'text-center align-middle'],
+                        orderable: false,
+                    },
+                    {
+                        targets: 29,
+                        width: "50px",
+                        className: ["no-sort", "text-center", 'text-center align-middle'],
+                        orderable: false,
+                    },
+                    {
+                        targets: 30,
+                        width: "50px",
+                        className: ["no-sort", "text-center", 'text-center align-middle'],
+                        orderable: false,
                     },
                     {
                         targets: 31,

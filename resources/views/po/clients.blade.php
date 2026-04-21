@@ -191,7 +191,7 @@
                         text: response.text,
                         icon: response.icon,
                         showConfirmButton: false,
-                        timer: 1500
+                        timer: 500
                     });
                 },
                 error: function(jqXHR) {
@@ -256,7 +256,7 @@
                                 text: response.text,
                                 icon: response.icon,
                                 showConfirmButton: false,
-                                timer: 1500
+                                timer: 500
                             });
                         },
                         error: function(jqXHR) {

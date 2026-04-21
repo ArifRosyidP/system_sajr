@@ -149,23 +149,31 @@ class PurchasingorderController extends Controller
         ->editColumn('id_personincharge', function ($row) {
             return $row->personincharge->nama ?? '-';
         })
-        ->addColumn('action', function ($row) {
-            return '<div class="text-center"> 
-            <button class="btn btn-sm btn-success" onClick="editModal(this)" style="width: 70px" data-id="' . $row->id . '">Edit</button> 
-            <button class="btn btn-sm btn-danger" onClick="deleteModal(this)" style="width: 70px" data-id="' . $row->id . '">Delete</button> 
-            </div>';
-        })
         ->editColumn('dp1', function ($row) {
-        return '<input type="checkbox" class="form-check-input" disabled '.($row->dp1 ? 'checked' : '').'>';
+            return '<div class="d-flex justify-content-center align-items-center">
+                    <input type="checkbox" class="form-check-input" disabled '.($row->dp1 ? 'checked' : '').'>
+                    </div>';
         })
         ->editColumn('pelunasan1', function ($row) {
-            return '<input type="checkbox" class="form-check-input" disabled '.($row->pelunasan1 ? 'checked' : '').'>';
+            return '<div class="d-flex justify-content-center align-items-center">
+                    <input type="checkbox" class="form-check-input" disabled '.($row->pelunasan1 ? 'checked' : '').'>
+                    </div>';
         })
         ->editColumn('dp2', function ($row) {
-            return '<input type="checkbox" class="form-check-input" disabled '.($row->dp2 ? 'checked' : '').'>';
+            return '<div class="d-flex justify-content-center align-items-center">
+                    <input type="checkbox" class="form-check-input" disabled '.($row->dp2 ? 'checked' : '').'>
+                    </div>';
         })
         ->editColumn('pelunasan2', function ($row) {
-            return '<input type="checkbox" class="form-check-input" disabled '.($row->pelunasan2 ? 'checked' : '').'>';
+            return '<div class="d-flex justify-content-center align-items-center">
+                    <input type="checkbox" class="form-check-input" disabled '.($row->pelunasan2 ? 'checked' : '').'>
+                    </div>';
+        })
+        ->addColumn('action', function ($row) {
+            return '<div class="d-flex justify-content-center align-items-center"> 
+            <button class="btn btn-sm btn-success" onClick="editModal(this)" style="width: 70px" data-id="' . $row->id . '"><i class="bi bi-pencil"></i></button> 
+            <button class="btn btn-sm btn-danger" onClick="deleteModal(this)" style="width: 70px" data-id="' . $row->id . '"><i class="bi bi-trash"></i></button> 
+            </div>';
         })
         ->rawColumns(['action','dp1','pelunasan1','dp2','pelunasan2'])
         ->make();
